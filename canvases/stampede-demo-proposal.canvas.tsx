@@ -30,6 +30,12 @@ export default function StampedeDemoProposal() {
   // Script step state: 1 | 2 | 3
   const [scriptStep, setScriptStep] = useCanvasState<number>("scriptStep", 1);
 
+  // Script scenario state: "b2b" | "b2c"
+  const [scriptScenario, setScriptScenario] = useCanvasState<string>("scriptScenario", "b2b");
+
+  // Script step state for B2C: 1 | 2 | 3
+  const [scriptStepB2C, setScriptStepB2C] = useCanvasState<number>("scriptStepB2C", 1);
+
   // Custom styling for headers and layouts
   const containerStyle = {
     padding: "24px",
@@ -128,125 +134,257 @@ export default function StampedeDemoProposal() {
 
   // Render Conversational Script Tab
   const renderScript = () => {
-    const steps = [
+    const stepsB2B = [
       { id: 1, label: "1. Multi-Intent Opening" },
       { id: 2, label: "2. Context Q&A" },
       { id: 3, label: "3. Slot Extraction" }
+    ];
+
+    const stepsB2C = [
+      { id: 1, label: "1. Multi-Intent Request" },
+      { id: 2, label: "2. Contextual Q&A" },
+      { id: 3, label: "3. Auto-Cart Adjustment" }
     ];
 
     return (
       <Stack gap={20}>
         <Callout tone="success" title="Interactive Script Simulator">
           <Text>
-            Select a step below to simulate how the conversational agent processes unstructured text, handles side-questions, and extracts structured data for Salesforce.
+            Select a scenario and step below to simulate how the conversational agent processes unstructured text, handles side-questions, and extracts structured data or manipulates client-side state.
           </Text>
         </Callout>
 
+        {/* Scenario Toggle */}
         <Row gap={8}>
-          {steps.map(step => (
-            <Pill
-              key={step.id}
-              active={scriptStep === step.id}
-              onClick={() => setScriptStep(step.id)}
-            >
-              {step.label}
-            </Pill>
-          ))}
+          <Button
+            variant={scriptScenario === "b2b" ? "primary" : "secondary"}
+            onClick={() => setScriptScenario("b2b")}
+            size="sm"
+          >
+            Scenario A: B2B Corporate Lead (Salesforce CRM)
+          </Button>
+          <Button
+            variant={scriptScenario === "b2c" ? "primary" : "secondary"}
+            onClick={() => setScriptScenario("b2c")}
+            size="sm"
+          >
+            Scenario B: B2C Ticket Booking (Auto-Cart Fill)
+          </Button>
+        </Row>
+
+        {/* Step Pills */}
+        <Row gap={8}>
+          {scriptScenario === "b2b" ? (
+            stepsB2B.map(step => (
+              <Pill
+                key={step.id}
+                active={scriptStep === step.id}
+                onClick={() => setScriptStep(step.id)}
+              >
+                {step.label}
+              </Pill>
+            ))
+          ) : (
+            stepsB2C.map(step => (
+              <Pill
+                key={step.id}
+                active={scriptStepB2C === step.id}
+                onClick={() => setScriptStepB2C(step.id)}
+              >
+                {step.label}
+              </Pill>
+            ))
+          )}
         </Row>
 
         <Grid columns="2fr 1fr" gap={20}>
           {/* Left: Chat Dialogue */}
           <Card>
             <CardHeader trailing={<Pill tone="neutral" active size="sm">Dialogue</Pill>}>
-              Agentforce Chat Widget
+              {scriptScenario === "b2b" ? "Agentforce Chat Widget (B2B Mode)" : "Agentforce Chat Widget (B2C Mode)"}
             </CardHeader>
             <CardBody>
-              <Stack gap={16}>
-                {scriptStep >= 1 && (
-                  <Stack gap={8}>
-                    <div style={{ background: theme.fill.tertiary, padding: "12px", borderRadius: "8px", maxWidth: "85%" }}>
-                      <Text size="small" weight="semibold" style={{ color: theme.palette.orange }}>User:</Text>
-                      <Text size="small">"Hey there! I'm planning a corporate outing for about 45 people during the Stampede. We want to see the Evening Show but also want a private space with catering. What do you recommend?"</Text>
-                    </div>
-                    <div style={{ background: theme.fill.secondary, padding: "12px", borderRadius: "8px", maxWidth: "85%", alignSelf: "flex-end", borderLeft: `3px solid ${theme.palette.red}` }}>
-                      <Text size="small" weight="semibold" style={{ color: theme.palette.red }}>Agentforce Agent:</Text>
-                      <Text size="small">"Howdy! That sounds like an unforgettable corporate outing. For a group of 45 looking for a private space with catering for the Evening Show, I highly recommend our premium <strong>Infield Suites</strong>—they sit right in the heart of the action with private catering and a spectacular view of the chuckwagons and fireworks. Alternatively, we could look at a semi-private <strong>Reserved Table Bundle at Ranchman's</strong>. Let me check the live Salesforce inventory for you. Do you have a specific date in mind, or are you flexible?"</Text>
-                    </div>
-                  </Stack>
-                )}
+              {scriptScenario === "b2b" ? (
+                <Stack gap={16}>
+                  {scriptStep >= 1 && (
+                    <Stack gap={8}>
+                      <div style={{ background: theme.fill.tertiary, padding: "12px", borderRadius: "8px", maxWidth: "85%" }}>
+                        <Text size="small" weight="semibold" style={{ color: theme.palette.orange }}>User:</Text>
+                        <Text size="small">"Hey there! I'm planning a corporate outing for about 45 people during the Stampede. We want to see the Evening Show but also want a private space with catering. What do you recommend?"</Text>
+                      </div>
+                      <div style={{ background: theme.fill.secondary, padding: "12px", borderRadius: "8px", maxWidth: "85%", alignSelf: "flex-end", borderLeft: `3px solid ${theme.palette.red}` }}>
+                        <Text size="small" weight="semibold" style={{ color: theme.palette.red }}>Agentforce Agent:</Text>
+                        <Text size="small">"Howdy! That sounds like an unforgettable corporate outing. For a group of 45 looking for a private space with catering for the Evening Show, I highly recommend our premium <strong>Infield Suites</strong>—they sit right in the heart of the action with private catering and a spectacular view of the chuckwagons and fireworks. Alternatively, we could look at a semi-private <strong>Reserved Table Bundle at Ranchman's</strong>. Let me check the live Salesforce inventory for you. Do you have a specific date in mind, or are you flexible?"</Text>
+                      </div>
+                    </Stack>
+                  )}
 
-                {scriptStep >= 2 && (
-                  <Stack gap={8}>
-                    <Divider />
-                    <div style={{ background: theme.fill.tertiary, padding: "12px", borderRadius: "8px", maxWidth: "85%" }}>
-                      <Text size="small" weight="semibold" style={{ color: theme.palette.orange }}>User:</Text>
-                      <Text size="small">"We're looking at July 9th or 10th. By the way, is there a dress code for the Infield Suites? Some of our clients are coming straight from a conference."</Text>
-                    </div>
-                    <div style={{ background: theme.fill.secondary, padding: "12px", borderRadius: "8px", maxWidth: "85%", alignSelf: "flex-end", borderLeft: `3px solid ${theme.palette.red}` }}>
-                      <Text size="small" weight="semibold" style={{ color: theme.palette.red }}>Agentforce Agent:</Text>
-                      <Text size="small">"No dress code to worry about! While many folks love to wear their favorite western boots and cowboy hats, business casual or conference attire is perfectly fine. We want everyone to feel comfortable!<br/><br/>Now, looking at our live Salesforce inventory for July 9th and 10th: I see we have an <strong>Infield Suite</strong> available on <strong>July 9th</strong>, but July 10th is currently sold out. For July 10th, we do have semi-private tables at Ranchman's. Would you like me to create a high-priority corporate lead in Salesforce for the July 9th Infield Suite so our VIP coordinator can lock it in for you?"</Text>
-                    </div>
-                  </Stack>
-                )}
+                  {scriptStep >= 2 && (
+                    <Stack gap={8}>
+                      <Divider />
+                      <div style={{ background: theme.fill.tertiary, padding: "12px", borderRadius: "8px", maxWidth: "85%" }}>
+                        <Text size="small" weight="semibold" style={{ color: theme.palette.orange }}>User:</Text>
+                        <Text size="small">"We're looking at July 9th or 10th. By the way, is there a dress code for the Infield Suites? Some of our clients are coming straight from a conference."</Text>
+                      </div>
+                      <div style={{ background: theme.fill.secondary, padding: "12px", borderRadius: "8px", maxWidth: "85%", alignSelf: "flex-end", borderLeft: `3px solid ${theme.palette.red}` }}>
+                        <Text size="small" weight="semibold" style={{ color: theme.palette.red }}>Agentforce Agent:</Text>
+                        <Text size="small">"No dress code to worry about! While many folks love to wear their favorite western boots and cowboy hats, business casual or conference attire is perfectly fine. We want everyone to feel comfortable!<br/><br/>Now, looking at our live Salesforce inventory for July 9th and 10th: I see we have an <strong>Infield Suite</strong> available on <strong>July 9th</strong>, but July 10th is currently sold out. For July 10th, we do have semi-private tables at Ranchman's. Would you like me to create a high-priority corporate lead in Salesforce for the July 9th Infield Suite so our VIP coordinator can lock it in for you?"</Text>
+                      </div>
+                    </Stack>
+                  )}
 
-                {scriptStep >= 3 && (
-                  <Stack gap={8}>
-                    <Divider />
-                    <div style={{ background: theme.fill.tertiary, padding: "12px", borderRadius: "8px", maxWidth: "85%" }}>
-                      <Text size="small" weight="semibold" style={{ color: theme.palette.orange }}>User:</Text>
-                      <Text size="small">"Yes, July 9th for the Infield Suite sounds perfect. Let's do that. My name is Sarah Jenkins, email is sarah@acme.com, company is Acme Corp."</Text>
-                    </div>
-                    <div style={{ background: theme.fill.secondary, padding: "12px", borderRadius: "8px", maxWidth: "85%", alignSelf: "flex-end", borderLeft: `3px solid ${theme.palette.red}` }}>
-                      <Text size="small" weight="semibold" style={{ color: theme.palette.red }}>Agentforce Agent:</Text>
-                      <Text size="small">"Awesome, Sarah! I've captured all the details and created a high-priority corporate lead in Salesforce (Reference: <strong>LD-2026-8802</strong>). A Stampede VIP Event Coordinator will reach out to you at sarah@acme.com to customize your catering menu and finalize the contract. Is there anything else I can help you plan today?"</Text>
-                    </div>
-                  </Stack>
-                )}
-              </Stack>
+                  {scriptStep >= 3 && (
+                    <Stack gap={8}>
+                      <Divider />
+                      <div style={{ background: theme.fill.tertiary, padding: "12px", borderRadius: "8px", maxWidth: "85%" }}>
+                        <Text size="small" weight="semibold" style={{ color: theme.palette.orange }}>User:</Text>
+                        <Text size="small">"Yes, July 9th for the Infield Suite sounds perfect. Let's do that. My name is Sarah Jenkins, email is sarah@acme.com, company is Acme Corp."</Text>
+                      </div>
+                      <div style={{ background: theme.fill.secondary, padding: "12px", borderRadius: "8px", maxWidth: "85%", alignSelf: "flex-end", borderLeft: `3px solid ${theme.palette.red}` }}>
+                        <Text size="small" weight="semibold" style={{ color: theme.palette.red }}>Agentforce Agent:</Text>
+                        <Text size="small">"Awesome, Sarah! I've captured all the details and created a high-priority corporate lead in Salesforce (Reference: <strong>LD-2026-8802</strong>). A Stampede VIP Event Coordinator will reach out to you at sarah@acme.com to customize your catering menu and finalize the contract. Is there anything else I can help you plan today?"</Text>
+                      </div>
+                    </Stack>
+                  )}
+                </Stack>
+              ) : (
+                <Stack gap={16}>
+                  {scriptStepB2C >= 1 && (
+                    <Stack gap={8}>
+                      <div style={{ background: theme.fill.tertiary, padding: "12px", borderRadius: "8px", maxWidth: "85%" }}>
+                        <Text size="small" weight="semibold" style={{ color: theme.palette.orange }}>User:</Text>
+                        <Text size="small">"Hey! I'm planning a trip with my family of 4 on July 9th. Can we get 4 general admission tickets and also add 4 afternoon Rodeo tickets?"</Text>
+                      </div>
+                      <div style={{ background: theme.fill.secondary, padding: "12px", borderRadius: "8px", maxWidth: "85%", alignSelf: "flex-end", borderLeft: `3px solid ${theme.palette.red}` }}>
+                        <Text size="small" weight="semibold" style={{ color: theme.palette.red }}>Agentforce Agent:</Text>
+                        <Text size="small">"Howdy! I'd love to help you with that. I've checked our live inventory for July 9th, and we have both General Admission and Rodeo tickets available. I've gone ahead and automatically added <strong>4 General Admission tickets ($100.00)</strong> and <strong>4 Afternoon Rodeo tickets ($180.00)</strong> to your cart! You can see them in your cart on the right. Is there anything else I can add for you?"</Text>
+                      </div>
+                    </Stack>
+                  )}
+
+                  {scriptStepB2C >= 2 && (
+                    <Stack gap={8}>
+                      <Divider />
+                      <div style={{ background: theme.fill.tertiary, padding: "12px", borderRadius: "8px", maxWidth: "85%" }}>
+                        <Text size="small" weight="semibold" style={{ color: theme.palette.orange }}>User:</Text>
+                        <Text size="small">"Wait, does the Rodeo ticket include admission to the grounds, or do we need both?"</Text>
+                      </div>
+                      <div style={{ background: theme.fill.secondary, padding: "12px", borderRadius: "8px", maxWidth: "85%", alignSelf: "flex-end", borderLeft: `3px solid ${theme.palette.red}` }}>
+                        <Text size="small" weight="semibold" style={{ color: theme.palette.red }}>Agentforce Agent:</Text>
+                        <Text size="small">"Great question! Yes, your Afternoon Rodeo ticket actually includes admission to the Stampede grounds for the entire day, so you don't need separate General Admission tickets! Would you like me to adjust your cart to remove the 4 General Admission tickets so you aren't double-paying?"</Text>
+                      </div>
+                    </Stack>
+                  )}
+
+                  {scriptStepB2C >= 3 && (
+                    <Stack gap={8}>
+                      <Divider />
+                      <div style={{ background: theme.fill.tertiary, padding: "12px", borderRadius: "8px", maxWidth: "85%" }}>
+                        <Text size="small" weight="semibold" style={{ color: theme.palette.orange }}>User:</Text>
+                        <Text size="small">"Oh, perfect! Yes, please remove the general admission tickets and just keep the 4 Rodeo passes."</Text>
+                      </div>
+                      <div style={{ background: theme.fill.secondary, padding: "12px", borderRadius: "8px", maxWidth: "85%", alignSelf: "flex-end", borderLeft: `3px solid ${theme.palette.red}` }}>
+                        <Text size="small" weight="semibold" style={{ color: theme.palette.red }}>Agentforce Agent:</Text>
+                        <Text size="small">"You got it! I've updated your cart to remove the 4 General Admission tickets. Your cart now contains just <strong>4 Afternoon Rodeo tickets</strong> (with grounds admission included) for a new total of <strong>$180.00</strong>. I'm ready to help you check out whenever you are!"</Text>
+                      </div>
+                    </Stack>
+                  )}
+                </Stack>
+              )}
             </CardBody>
           </Card>
 
-          {/* Right: Salesforce CRM Structured Fields */}
+          {/* Right Side Panel: Salesforce CRM (B2B) OR Shopping Cart (B2C) */}
           <Stack gap={16}>
-            <Card style={{ height: "100%" }}>
-              <CardHeader trailing={<Pill tone="info" active size="sm">Salesforce CRM</Pill>}>
-                Extracted Fields
-              </CardHeader>
-              <CardBody>
-                <Stack gap={12}>
-                  <div style={{ background: theme.fill.tertiary, padding: "8px 12px", borderRadius: "4px" }}>
-                    <Text size="small" tone="tertiary" weight="semibold">Lead Name</Text>
-                    <Text size="small" weight="medium">{scriptStep >= 3 ? "Sarah Jenkins" : "—"}</Text>
-                  </div>
-                  <div style={{ background: theme.fill.tertiary, padding: "8px 12px", borderRadius: "4px" }}>
-                    <Text size="small" tone="tertiary" weight="semibold">Company</Text>
-                    <Text size="small" weight="medium">{scriptStep >= 3 ? "Acme Corp" : "—"}</Text>
-                  </div>
-                  <div style={{ background: theme.fill.tertiary, padding: "8px 12px", borderRadius: "4px" }}>
-                    <Text size="small" tone="tertiary" weight="semibold">Email</Text>
-                    <Text size="small" weight="medium">{scriptStep >= 3 ? "sarah@acme.com" : "—"}</Text>
-                  </div>
-                  <div style={{ background: theme.fill.tertiary, padding: "8px 12px", borderRadius: "4px" }}>
-                    <Text size="small" tone="tertiary" weight="semibold">Preferred Date</Text>
-                    <Text size="small" weight="medium">{scriptStep >= 2 ? "July 9, 2026" : "—"}</Text>
-                  </div>
-                  <div style={{ background: theme.fill.tertiary, padding: "8px 12px", borderRadius: "4px" }}>
-                    <Text size="small" tone="tertiary" weight="semibold">Desired Venue</Text>
-                    <Text size="small" weight="medium">{scriptStep >= 1 ? "Infield Suites" : "—"}</Text>
-                  </div>
-                  <div style={{ background: theme.fill.tertiary, padding: "8px 12px", borderRadius: "4px" }}>
-                    <Text size="small" tone="tertiary" weight="semibold">Group Size</Text>
-                    <Text size="small" weight="medium">{scriptStep >= 1 ? "45" : "—"}</Text>
-                  </div>
+            {scriptScenario === "b2b" ? (
+              <Card style={{ height: "100%" }}>
+                <CardHeader trailing={<Pill tone="info" active size="sm">Salesforce CRM</Pill>}>
+                  Extracted Fields
+                </CardHeader>
+                <CardBody>
+                  <Stack gap={12}>
+                    <div style={{ background: theme.fill.tertiary, padding: "8px 12px", borderRadius: "4px" }}>
+                      <Text size="small" tone="tertiary" weight="semibold">Lead Name</Text>
+                      <Text size="small" weight="medium">{scriptStep >= 3 ? "Sarah Jenkins" : "—"}</Text>
+                    </div>
+                    <div style={{ background: theme.fill.tertiary, padding: "8px 12px", borderRadius: "4px" }}>
+                      <Text size="small" tone="tertiary" weight="semibold">Company</Text>
+                      <Text size="small" weight="medium">{scriptStep >= 3 ? "Acme Corp" : "—"}</Text>
+                    </div>
+                    <div style={{ background: theme.fill.tertiary, padding: "8px 12px", borderRadius: "4px" }}>
+                      <Text size="small" tone="tertiary" weight="semibold">Email</Text>
+                      <Text size="small" weight="medium">{scriptStep >= 3 ? "sarah@acme.com" : "—"}</Text>
+                    </div>
+                    <div style={{ background: theme.fill.tertiary, padding: "8px 12px", borderRadius: "4px" }}>
+                      <Text size="small" tone="tertiary" weight="semibold">Preferred Date</Text>
+                      <Text size="small" weight="medium">{scriptStep >= 2 ? "July 9, 2026" : "—"}</Text>
+                    </div>
+                    <div style={{ background: theme.fill.tertiary, padding: "8px 12px", borderRadius: "4px" }}>
+                      <Text size="small" tone="tertiary" weight="semibold">Desired Venue</Text>
+                      <Text size="small" weight="medium">{scriptStep >= 1 ? "Infield Suites" : "—"}</Text>
+                    </div>
+                    <div style={{ background: theme.fill.tertiary, padding: "8px 12px", borderRadius: "4px" }}>
+                      <Text size="small" tone="tertiary" weight="semibold">Group Size</Text>
+                      <Text size="small" weight="medium">{scriptStep >= 1 ? "45" : "—"}</Text>
+                    </div>
 
-                  {scriptStep === 3 && (
-                    <Callout tone="success" title="Lead Inserted">
-                      <Text size="small">Sarah's inquiry has been written as a high-priority Lead in Salesforce CRM.</Text>
-                    </Callout>
-                  )}
-                </Stack>
-              </CardBody>
-            </Card>
+                    {scriptStep === 3 && (
+                      <Callout tone="success" title="Lead Inserted">
+                        <Text size="small">Sarah's inquiry has been written as a high-priority Lead in Salesforce CRM.</Text>
+                      </Callout>
+                    )}
+                  </Stack>
+                </CardBody>
+              </Card>
+            ) : (
+              <Card style={{ height: "100%" }}>
+                <CardHeader trailing={<Pill tone="added" active size="sm">Shopping Cart</Pill>}>
+                  Your Stampede Cart
+                </CardHeader>
+                <CardBody>
+                  <Stack gap={12}>
+                    {scriptStepB2C >= 1 && (
+                      <Stack gap={8}>
+                        {scriptStepB2C < 3 && (
+                          <div style={{ background: theme.fill.tertiary, padding: "8px 12px", borderRadius: "4px" }}>
+                            <Row justify="space-between" align="center">
+                              <Stack gap={2}>
+                                <Text size="small" weight="semibold">General Admission</Text>
+                                <Text size="xs" tone="secondary">Qty: 4</Text>
+                              </Stack>
+                              <Text size="small" weight="bold">$100.00</Text>
+                            </Row>
+                          </div>
+                        )}
+                        <div style={{ background: theme.fill.tertiary, padding: "8px 12px", borderRadius: "4px" }}>
+                          <Row justify="space-between" align="center">
+                            <Stack gap={2}>
+                              <Text size="small" weight="semibold">Afternoon Rodeo Pass</Text>
+                              <Text size="xs" tone="secondary">Qty: 4</Text>
+                            </Stack>
+                            <Text size="small" weight="bold">$180.00</Text>
+                          </Row>
+                        </div>
+                        <Divider />
+                        <Row justify="space-between">
+                          <Text size="small" tone="secondary">Total</Text>
+                          <Text size="small" weight="bold">
+                            {scriptStepB2C === 3 ? "$180.00" : "$280.00"}
+                          </Text>
+                        </Row>
+                        <Callout tone="success" title={scriptStepB2C === 3 ? "Cart Adjusted" : "Cart Populated"}>
+                          <Text size="small">
+                            {scriptStepB2C === 3 
+                              ? "The agent automatically adjusted your cart to remove redundant grounds admission." 
+                              : "The agent automatically populated your cart with GA and Rodeo passes."}
+                          </Text>
+                        </Callout>
+                      </Stack>
+                    )}
+                  </Stack>
+                </CardBody>
+              </Card>
+            )}
           </Stack>
         </Grid>
       </Stack>

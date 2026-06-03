@@ -37,7 +37,7 @@ This document outlines the step-by-step narrative for presenting the Calgary Sta
 
 ---
 
-## Scene 2: The Conversational Agentforce Experience
+## Scene 2A: The B2B High-Value Lead Capture (Corporate Outing)
 
 ### Action on Screen
 1. The Agentforce Chat Widget slides open with an open-ended, welcoming greeting:
@@ -102,6 +102,50 @@ This document outlines the step-by-step narrative for presenting the Calgary Sta
    > - **Group Size:** 45
    > 
    > A Stampede VIP Event Coordinator will reach out to you at sarah@acme.com to customize your catering menu and finalize the contract. Is there anything else I can help you plan today?"*
+
+---
+
+## Scene 2B: The B2C Frictionless Transaction (Auto-Cart Fill)
+
+### Speaker Narrative
+> "Now, let's look at a simpler, transactional request. What if a customer just wants to buy tickets for their family? In a traditional e-commerce flow, they have to navigate to the ticket page, select General Admission, choose a date, add to cart, go back, find Rodeo tickets, select the afternoon session, add to cart, and then check out. 
+> 
+> With Agentforce, the agent can perform these actions *for* the customer. But more importantly, the agent can answer contextual questions and dynamically adjust the cart based on the conversation."
+
+### Action on Screen
+1. Toggle the Chat Widget to **B2C Mode**.
+2. **Step 1: Multi-Intent Request**: The presenter types a direct request:
+   > **User:** *"Hey! I'm planning a trip with my family of 4 on July 9th. Can we get 4 general admission tickets and also add 4 afternoon Rodeo tickets?"*
+3. Click **Send**.
+4. The Agent responds instantly, confirming the action:
+   > *"Howdy! I'd love to help you with that. I've checked our live inventory for July 9th, and we have both General Admission and Rodeo tickets available. 
+   > 
+   > I've gone ahead and automatically added **4 General Admission tickets ($100.00)** and **4 Afternoon Rodeo tickets ($180.00)** to your cart! You can see them in your cart on the right. 
+   > 
+   > Is there anything else I can add for you?"*
+5. Highlight the **Shopping Cart Panel** on the website:
+   - Point out that **4x General Admission ($100.00)** and **4x Rodeo Afternoon Passes ($180.00)** have been added automatically.
+   - Total is **$280.00**.
+6. **Step 2: Contextual Q&A**: The presenter asks a clarifying question:
+   > **User:** *"Wait, does the Rodeo ticket include admission to the grounds, or do we need both?"*
+7. Click **Send**.
+8. The Agent answers and offers to adjust the cart:
+   > *"Great question! Yes, your Afternoon Rodeo ticket actually includes admission to the Stampede grounds for the entire day, so you don't need separate General Admission tickets! 
+   > 
+   > Would you like me to adjust your cart to remove the 4 General Admission tickets so you aren't double-paying?"*
+9. **Step 3: Auto-Cart Adjustment**: The presenter confirms:
+   > **User:** *"Oh, perfect! Yes, please remove the general admission tickets and just keep the 4 Rodeo passes."*
+10. Click **Send**.
+11. The Agent confirms and updates the cart:
+    > *"You got it! I've updated your cart to remove the 4 General Admission tickets. 
+    > 
+    > Your cart now contains just **4 Afternoon Rodeo tickets** (with grounds admission included) for a new total of **$180.00**. 
+    > 
+    > I'm ready to help you check out whenever you are!"*
+12. Highlight the **Shopping Cart Panel**:
+    - Show that the **4x General Admission** tickets have been automatically removed.
+    - Only **4x Rodeo Afternoon Passes ($180.00)** remain.
+    - Total is now **$180.00**, ready for checkout.
 
 ---
 

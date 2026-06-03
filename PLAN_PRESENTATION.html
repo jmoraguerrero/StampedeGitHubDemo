@@ -229,16 +229,26 @@
             <div class="bg-white p-6 rounded-xl border border-stampede-border shadow-sm">
                 <h3 class="text-xl font-serif font-bold text-stampede-charcoal mb-2">Conversational Demo Walkthrough</h3>
                 <p class="text-sm text-gray-600 leading-relaxed">
-                    This interactive script simulator demonstrates a natural, friction-free interaction. Instead of forcing the user through rigid forms, the agent handles multi-intent statements, answers contextual Q&A mid-conversation, and dynamically extracts structured data to write to Salesforce.
+                    This interactive script simulator demonstrates a natural, friction-free interaction. Instead of forcing the user through rigid forms, the agent handles multi-intent statements, answers contextual Q&A mid-conversation, and dynamically extracts structured data or manipulates client-side state.
                 </p>
+            </div>
+
+            <!-- Scenario Selector -->
+            <div class="flex flex-col sm:flex-row gap-4 mb-6 bg-white p-4 rounded-xl border border-stampede-border">
+                <button onclick="switchScenario('b2b')" id="scenario-btn-b2b" class="flex-1 py-3 px-4 rounded-lg font-serif font-bold text-sm border-2 border-stampede-red text-stampede-red bg-stampede-red/5 transition-all flex items-center justify-center gap-2">
+                    <i data-lucide="building-2" class="w-4 h-4"></i> Scenario A: B2B Corporate Lead Capture (Salesforce CRM)
+                </button>
+                <button onclick="switchScenario('b2c')" id="scenario-btn-b2c" class="flex-1 py-3 px-4 rounded-lg font-serif font-bold text-sm border-2 border-transparent text-gray-500 hover:text-stampede-red bg-gray-50 transition-all flex items-center justify-center gap-2">
+                    <i data-lucide="shopping-cart" class="w-4 h-4"></i> Scenario B: B2C Ticket Booking (Auto-Cart Fill)
+                </button>
             </div>
 
             <!-- Chat Simulator Preview -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <!-- Left: Conversation Flow -->
                 <div class="lg:col-span-2 space-y-6">
-                    <!-- Interactive Step Buttons -->
-                    <div class="flex gap-2 border-b border-stampede-border pb-4">
+                    <!-- Interactive Step Buttons for B2B -->
+                    <div id="step-buttons-b2b" class="flex gap-2 border-b border-stampede-border pb-4">
                         <button onclick="setScriptStep(1)" id="step-btn-1" class="step-btn px-4 py-2 text-xs font-bold rounded-full bg-stampede-red text-white border border-stampede-red transition-all">
                             Step 1: Multi-Intent Opening
                         </button>
@@ -247,6 +257,19 @@
                         </button>
                         <button onclick="setScriptStep(3)" id="step-btn-3" class="step-btn px-4 py-2 text-xs font-medium rounded-full bg-white text-gray-600 border border-stampede-border hover:text-stampede-red transition-all">
                             Step 3: Slot Extraction
+                        </button>
+                    </div>
+
+                    <!-- Interactive Step Buttons for B2C -->
+                    <div id="step-buttons-b2c" class="flex gap-2 border-b border-stampede-border pb-4 hidden">
+                        <button onclick="setScriptStepB2C(1)" id="step-btn-b2c-1" class="step-btn-b2c px-4 py-2 text-xs font-bold rounded-full bg-stampede-red text-white border border-stampede-red transition-all">
+                            Step 1: Multi-Intent Request
+                        </button>
+                        <button onclick="setScriptStepB2C(2)" id="step-btn-b2c-2" class="step-btn-b2c px-4 py-2 text-xs font-medium rounded-full bg-white text-gray-600 border border-stampede-border hover:text-stampede-red transition-all">
+                            Step 2: Contextual Q&A
+                        </button>
+                        <button onclick="setScriptStepB2C(3)" id="step-btn-b2c-3" class="step-btn-b2c px-4 py-2 text-xs font-medium rounded-full bg-white text-gray-600 border border-stampede-border hover:text-stampede-red transition-all">
+                            Step 3: Auto-Cart Adjustment
                         </button>
                     </div>
 
@@ -259,50 +282,104 @@
                         
                         <!-- Chat Bubbles Container -->
                         <div class="p-6 space-y-6" id="chat-bubbles">
-                            <!-- Step 1 Content (Default) -->
-                            <div class="space-y-6" id="chat-step-1">
-                                <div class="flex items-start gap-3 max-w-[85%]">
-                                    <div class="w-8 h-8 rounded-full bg-stampede-gold flex items-center justify-center shrink-0 text-xs font-bold text-stampede-charcoal">U</div>
-                                    <div class="chat-bubble-user p-4 rounded-2xl rounded-tl-none text-sm leading-relaxed shadow-sm">
-                                        "Hey there! I'm planning a corporate outing for about 45 people during the Stampede. We want to see the Evening Show but also want a private space with catering. What do you recommend?"
+                            <!-- B2B CHAT CONTAINER -->
+                            <div id="chat-container-b2b" class="space-y-6">
+                                <!-- Step 1 Content (Default) -->
+                                <div class="space-y-6" id="chat-step-1">
+                                    <div class="flex items-start gap-3 max-w-[85%]">
+                                        <div class="w-8 h-8 rounded-full bg-stampede-gold flex items-center justify-center shrink-0 text-xs font-bold text-stampede-charcoal">U</div>
+                                        <div class="chat-bubble-user p-4 rounded-2xl rounded-tl-none text-sm leading-relaxed shadow-sm">
+                                            "Hey there! I'm planning a corporate outing for about 45 people during the Stampede. We want to see the Evening Show but also want a private space with catering. What do you recommend?"
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start gap-3 max-w-[85%] ml-auto flex-row-reverse">
+                                        <div class="w-8 h-8 rounded-full bg-stampede-red flex items-center justify-center shrink-0 text-xs font-bold text-white">A</div>
+                                        <div class="chat-bubble-agent p-4 rounded-2xl rounded-tl-none text-sm leading-relaxed shadow-sm">
+                                            "Howdy! That sounds like an unforgettable corporate outing. For a group of 45 looking for a private space with catering for the Evening Show, I highly recommend our premium <strong>Infield Suites</strong>—they sit right in the heart of the action with private catering and a spectacular view of the chuckwagons and fireworks.<br><br>Alternatively, we could look at a semi-private <strong>Reserved Table Bundle at Ranchman's</strong>. Let me check the live Salesforce inventory for you. Do you have a specific date in mind, or are you flexible?"
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="flex items-start gap-3 max-w-[85%] ml-auto flex-row-reverse">
-                                    <div class="w-8 h-8 rounded-full bg-stampede-red flex items-center justify-center shrink-0 text-xs font-bold text-white">A</div>
-                                    <div class="chat-bubble-agent p-4 rounded-2xl rounded-tr-none text-sm leading-relaxed shadow-sm">
-                                        "Howdy! That sounds like an unforgettable corporate outing. For a group of 45 looking for a private space with catering for the Evening Show, I highly recommend our premium <strong>Infield Suites</strong>—they sit right in the heart of the action with private catering and a spectacular view of the chuckwagons and fireworks.<br><br>Alternatively, we could look at a semi-private <strong>Reserved Table Bundle at Ranchman's</strong>. Let me check the live Salesforce inventory for you. Do you have a specific date in mind, or are you flexible?"
+
+                                <!-- Step 2 Content (Hidden by default) -->
+                                <div class="space-y-6 hidden" id="chat-step-2">
+                                    <div class="flex items-start gap-3 max-w-[85%]">
+                                        <div class="w-8 h-8 rounded-full bg-stampede-gold flex items-center justify-center shrink-0 text-xs font-bold text-stampede-charcoal">U</div>
+                                        <div class="chat-bubble-user p-4 rounded-2xl rounded-tl-none text-sm leading-relaxed shadow-sm">
+                                            "We're looking at July 9th or 10th. By the way, is there a dress code for the Infield Suites? Some of our clients are coming straight from a conference."
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start gap-3 max-w-[85%] ml-auto flex-row-reverse">
+                                        <div class="w-8 h-8 rounded-full bg-stampede-red flex items-center justify-center shrink-0 text-xs font-bold text-white">A</div>
+                                        <div class="chat-bubble-agent p-4 rounded-2xl rounded-tr-none text-sm leading-relaxed shadow-sm">
+                                            "No dress code to worry about! While many folks love to wear their favorite western boots and cowboy hats, business casual or conference attire is perfectly fine. We want everyone to feel comfortable!<br><br>Now, looking at our live Salesforce inventory for July 9th and 10th: I see we have an <strong>Infield Suite</strong> available on <strong>July 9th</strong>, but July 10th is currently sold out. For July 10th, we do have semi-private tables at Ranchman's.<br><br>Would you like me to create a high-priority corporate lead in Salesforce for the July 9th Infield Suite so our VIP coordinator can lock it in for you?"
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Step 3 Content (Hidden by default) -->
+                                <div class="space-y-6 hidden" id="chat-step-3">
+                                    <div class="flex items-start gap-3 max-w-[85%]">
+                                        <div class="w-8 h-8 rounded-full bg-stampede-gold flex items-center justify-center shrink-0 text-xs font-bold text-stampede-charcoal">U</div>
+                                        <div class="chat-bubble-user p-4 rounded-2xl rounded-tl-none text-sm leading-relaxed shadow-sm">
+                                            "Yes, July 9th for the Infield Suite sounds perfect. Let's do that. My name is Sarah Jenkins, email is sarah@acme.com, company is Acme Corp."
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start gap-3 max-w-[85%] ml-auto flex-row-reverse">
+                                        <div class="w-8 h-8 rounded-full bg-stampede-red flex items-center justify-center shrink-0 text-xs font-bold text-white">A</div>
+                                        <div class="chat-bubble-agent p-4 rounded-2xl rounded-tr-none text-sm leading-relaxed shadow-sm">
+                                            "Awesome, Sarah! I've captured all the details and created a high-priority corporate lead in Salesforce (Reference: <strong>LD-2026-8802</strong>).<br><br>Here is what I've registered:<br>• <strong>Contact:</strong> Sarah Jenkins<br>• <strong>Company:</strong> Acme Corp<br>• <strong>Email:</strong> sarah@acme.com<br>• <strong>Venue:</strong> Infield Suites<br>• <strong>Date:</strong> July 9, 2026<br>• <strong>Group Size:</strong> 45<br><br>A Stampede VIP Event Coordinator will reach out to you at sarah@acme.com to customize your catering menu and finalize the contract. Is there anything else I can help you plan today?"
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Step 2 Content (Hidden by default) -->
-                            <div class="space-y-6 hidden" id="chat-step-2">
-                                <div class="flex items-start gap-3 max-w-[85%]">
-                                    <div class="w-8 h-8 rounded-full bg-stampede-gold flex items-center justify-center shrink-0 text-xs font-bold text-stampede-charcoal">U</div>
-                                    <div class="chat-bubble-user p-4 rounded-2xl rounded-tl-none text-sm leading-relaxed shadow-sm">
-                                        "We're looking at July 9th or 10th. By the way, is there a dress code for the Infield Suites? Some of our clients are coming straight from a conference."
+                            <!-- B2C CHAT CONTAINER (Hidden by default) -->
+                            <div id="chat-container-b2c" class="space-y-6 hidden">
+                                <!-- Step 1 Content -->
+                                <div class="space-y-6" id="chat-step-b2c-1">
+                                    <div class="flex items-start gap-3 max-w-[85%]">
+                                        <div class="w-8 h-8 rounded-full bg-stampede-gold flex items-center justify-center shrink-0 text-xs font-bold text-stampede-charcoal">U</div>
+                                        <div class="chat-bubble-user p-4 rounded-2xl rounded-tl-none text-sm leading-relaxed shadow-sm">
+                                            "Hey! I'm planning a trip with my family of 4 on July 9th. Can we get 4 general admission tickets and also add 4 afternoon Rodeo tickets?"
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start gap-3 max-w-[85%] ml-auto flex-row-reverse">
+                                        <div class="w-8 h-8 rounded-full bg-stampede-red flex items-center justify-center shrink-0 text-xs font-bold text-white">A</div>
+                                        <div class="chat-bubble-agent p-4 rounded-2xl rounded-tr-none text-sm leading-relaxed shadow-sm">
+                                            "Howdy! I'd love to help you with that. I've checked our live inventory for July 9th, and we have both General Admission and Rodeo tickets available.<br><br>I've gone ahead and automatically added <strong>4 General Admission tickets ($100.00)</strong> and <strong>4 Afternoon Rodeo tickets ($180.00)</strong> to your cart! You can see them in your cart on the right.<br><br>Is there anything else I can add for you?"
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="flex items-start gap-3 max-w-[85%] ml-auto flex-row-reverse">
-                                    <div class="w-8 h-8 rounded-full bg-stampede-red flex items-center justify-center shrink-0 text-xs font-bold text-white">A</div>
-                                    <div class="chat-bubble-agent p-4 rounded-2xl rounded-tr-none text-sm leading-relaxed shadow-sm">
-                                        "No dress code to worry about! While many folks love to wear their favorite western boots and cowboy hats, business casual or conference attire is perfectly fine. We want everyone to feel comfortable!<br><br>Now, looking at our live Salesforce inventory for July 9th and 10th: I see we have an <strong>Infield Suite</strong> available on <strong>July 9th</strong>, but July 10th is currently sold out. For July 10th, we do have semi-private tables at Ranchman's.<br><br>Would you like me to create a high-priority corporate lead in Salesforce for the July 9th Infield Suite so our VIP coordinator can lock it in for you?"
-                                    </div>
-                                </div>
-                            </div>
 
-                            <!-- Step 3 Content (Hidden by default) -->
-                            <div class="space-y-6 hidden" id="chat-step-3">
-                                <div class="flex items-start gap-3 max-w-[85%]">
-                                    <div class="w-8 h-8 rounded-full bg-stampede-gold flex items-center justify-center shrink-0 text-xs font-bold text-stampede-charcoal">U</div>
-                                    <div class="chat-bubble-user p-4 rounded-2xl rounded-tl-none text-sm leading-relaxed shadow-sm">
-                                        "Yes, July 9th for the Infield Suite sounds perfect. Let's do that. My name is Sarah Jenkins, email is sarah@acme.com, company is Acme Corp."
+                                <!-- Step 2 Content (Hidden by default) -->
+                                <div class="space-y-6 hidden" id="chat-step-b2c-2">
+                                    <div class="flex items-start gap-3 max-w-[85%]">
+                                        <div class="w-8 h-8 rounded-full bg-stampede-gold flex items-center justify-center shrink-0 text-xs font-bold text-stampede-charcoal">U</div>
+                                        <div class="chat-bubble-user p-4 rounded-2xl rounded-tl-none text-sm leading-relaxed shadow-sm">
+                                            "Wait, does the Rodeo ticket include admission to the grounds, or do we need both?"
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start gap-3 max-w-[85%] ml-auto flex-row-reverse">
+                                        <div class="w-8 h-8 rounded-full bg-stampede-red flex items-center justify-center shrink-0 text-xs font-bold text-white">A</div>
+                                        <div class="chat-bubble-agent p-4 rounded-2xl rounded-tr-none text-sm leading-relaxed shadow-sm">
+                                            "Great question! Yes, your Afternoon Rodeo ticket actually includes admission to the Stampede grounds for the entire day, so you don't need separate General Admission tickets!<br><br>Would you like me to adjust your cart to remove the 4 General Admission tickets so you aren't double-paying?"
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="flex items-start gap-3 max-w-[85%] ml-auto flex-row-reverse">
-                                    <div class="w-8 h-8 rounded-full bg-stampede-red flex items-center justify-center shrink-0 text-xs font-bold text-white">A</div>
-                                    <div class="chat-bubble-agent p-4 rounded-2xl rounded-tr-none text-sm leading-relaxed shadow-sm">
-                                        "Awesome, Sarah! I've captured all the details and created a high-priority corporate lead in Salesforce (Reference: <strong>LD-2026-8802</strong>).<br><br>Here is what I've registered:<br>• <strong>Contact:</strong> Sarah Jenkins<br>• <strong>Company:</strong> Acme Corp<br>• <strong>Email:</strong> sarah@acme.com<br>• <strong>Venue:</strong> Infield Suites<br>• <strong>Date:</strong> July 9, 2026<br>• <strong>Group Size:</strong> 45<br><br>A Stampede VIP Event Coordinator will reach out to you at sarah@acme.com to customize your catering menu and finalize the contract. Is there anything else I can help you plan today?"
+
+                                <!-- Step 3 Content (Hidden by default) -->
+                                <div class="space-y-6 hidden" id="chat-step-b2c-3">
+                                    <div class="flex items-start gap-3 max-w-[85%]">
+                                        <div class="w-8 h-8 rounded-full bg-stampede-gold flex items-center justify-center shrink-0 text-xs font-bold text-stampede-charcoal">U</div>
+                                        <div class="chat-bubble-user p-4 rounded-2xl rounded-tl-none text-sm leading-relaxed shadow-sm">
+                                            "Oh, perfect! Yes, please remove the general admission tickets and just keep the 4 Rodeo passes."
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start gap-3 max-w-[85%] ml-auto flex-row-reverse">
+                                        <div class="w-8 h-8 rounded-full bg-stampede-red flex items-center justify-center shrink-0 text-xs font-bold text-white">A</div>
+                                        <div class="chat-bubble-agent p-4 rounded-2xl rounded-tr-none text-sm leading-relaxed shadow-sm">
+                                            "You got it! I've updated your cart to remove the 4 General Admission tickets.<br><br>Your cart now contains just <strong>4 Afternoon Rodeo tickets</strong> (with grounds admission included) for a new total of <strong>$180.00</strong>.<br><br>I'm ready to help you check out whenever you are!"
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -310,9 +387,10 @@
                     </div>
                 </div>
 
-                <!-- Right: Salesforce CRM Real-time Extraction -->
+                <!-- Right Side Panel (Salesforce CRM Console OR Shopping Cart) -->
                 <div class="space-y-6">
-                    <div class="bg-stampede-charcoal text-white p-6 rounded-xl border border-stampede-gold/30 shadow-lg sticky top-6">
+                    <!-- B2B PANEL: Salesforce CRM Console -->
+                    <div id="panel-salesforce" class="bg-stampede-charcoal text-white p-6 rounded-xl border border-stampede-gold/30 shadow-lg sticky top-6">
                         <div class="flex items-center gap-2 mb-4 text-stampede-gold border-b border-white/10 pb-3">
                             <i data-lucide="database" class="w-5 h-5"></i>
                             <h4 class="font-serif font-bold text-lg">Salesforce CRM Console</h4>
@@ -349,6 +427,58 @@
                             <div class="bg-green-900/20 text-green-400 p-3 rounded border border-green-800/50 text-xs font-semibold flex items-center gap-2 mt-4 hidden" id="crm-success-badge">
                                 <i data-lucide="check-circle" class="w-4 h-4"></i> Lead Inserted Successfully
                             </div>
+                        </div>
+                    </div>
+
+                    <!-- B2C PANEL: Shopping Cart -->
+                    <div id="panel-cart" class="bg-white text-stampede-charcoal p-6 rounded-xl border border-stampede-border shadow-lg sticky top-6 hidden">
+                        <div class="flex items-center gap-2 mb-4 text-stampede-red border-b border-stampede-border pb-3">
+                            <i data-lucide="shopping-cart" class="w-5 h-5"></i>
+                            <h4 class="font-serif font-bold text-lg">Your Stampede Cart</h4>
+                        </div>
+                        <p class="text-xs text-gray-500 mb-6 leading-relaxed">
+                            Watch the agent dynamically add, remove, and adjust items in the shopping cart based on your conversation.
+                        </p>
+
+                        <div class="space-y-4">
+                            <!-- General Admission Item -->
+                            <div class="p-3.5 rounded border border-stampede-border transition-all flex justify-between items-center bg-stampede-cream/30" id="cart-item-ga">
+                                <div>
+                                    <div class="text-xs font-bold text-stampede-charcoal">Stampede General Admission</div>
+                                    <div class="text-[10px] text-gray-500">Date: July 9, 2026 · Qty: 4</div>
+                                </div>
+                                <div class="text-sm font-bold text-stampede-charcoal">$100.00</div>
+                            </div>
+
+                            <!-- Rodeo Passes Item -->
+                            <div class="p-3.5 rounded border border-stampede-border transition-all flex justify-between items-center bg-stampede-cream/30" id="cart-item-rodeo">
+                                <div>
+                                    <div class="text-xs font-bold text-stampede-charcoal">Afternoon Rodeo Pass</div>
+                                    <div class="text-[10px] text-gray-500">Date: July 9, 2026 · Qty: 4</div>
+                                </div>
+                                <div class="text-sm font-bold text-stampede-charcoal">$180.00</div>
+                            </div>
+
+                            <!-- Cart Summary -->
+                            <div class="border-t border-stampede-border pt-4 space-y-2">
+                                <div class="flex justify-between items-center text-xs text-gray-500">
+                                    <span>Subtotal</span>
+                                    <span id="cart-subtotal">$280.00</span>
+                                </div>
+                                <div class="flex justify-between items-center text-sm font-bold text-stampede-charcoal pt-1">
+                                    <span>Total</span>
+                                    <span id="cart-total">$280.00</span>
+                                </div>
+                            </div>
+
+                            <!-- Success Badge -->
+                            <div class="bg-green-50 text-green-700 p-3 rounded border border-green-200 text-xs font-semibold flex items-center gap-2 mt-4" id="cart-success-badge">
+                                <i data-lucide="check-circle" class="w-4 h-4 text-green-600"></i> Cart Updated Automatically!
+                            </div>
+
+                            <button class="w-full py-3 bg-stampede-red hover:bg-stampede-darkRed text-white font-bold text-sm rounded-lg transition-all flex items-center justify-center gap-2 mt-4 shadow-sm">
+                                <i data-lucide="credit-card" class="w-4 h-4"></i> Proceed to Checkout
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -484,6 +614,8 @@
 
     <!-- Tab & Interactive Script -->
     <script>
+        let currentScenario = 'b2b';
+
         function switchTab(tabId) {
             // Hide all tab contents
             document.querySelectorAll('.tab-content').forEach(content => {
@@ -506,6 +638,53 @@
             const activeTab = document.getElementById('tab-' + tabId);
             activeTab.classList.add('border-stampede-red', 'text-stampede-red');
             activeTab.classList.remove('border-transparent', 'text-gray-500');
+
+            if (tabId === 'script') {
+                switchScenario('b2b');
+            }
+        }
+
+        function switchScenario(scenario) {
+            currentScenario = scenario;
+
+            // Reset buttons
+            const btnB2b = document.getElementById('scenario-btn-b2b');
+            const btnB2c = document.getElementById('scenario-btn-b2c');
+
+            if (scenario === 'b2b') {
+                btnB2b.classList.add('border-stampede-red', 'text-stampede-red', 'bg-stampede-red/5');
+                btnB2b.classList.remove('border-transparent', 'text-gray-500', 'bg-gray-50');
+                btnB2c.classList.remove('border-stampede-red', 'text-stampede-red', 'bg-stampede-red/5');
+                btnB2c.classList.add('border-transparent', 'text-gray-500', 'bg-gray-50');
+
+                document.getElementById('step-buttons-b2b').classList.remove('hidden');
+                document.getElementById('step-buttons-b2c').classList.add('hidden');
+
+                document.getElementById('chat-container-b2b').classList.remove('hidden');
+                document.getElementById('chat-container-b2c').classList.add('hidden');
+
+                document.getElementById('panel-salesforce').classList.remove('hidden');
+                document.getElementById('panel-cart').classList.add('hidden');
+
+                setScriptStep(1);
+            } else {
+                btnB2c.classList.add('border-stampede-red', 'text-stampede-red', 'bg-stampede-red/5');
+                btnB2c.classList.remove('border-transparent', 'text-gray-500', 'bg-gray-50');
+                btnB2b.classList.remove('border-stampede-red', 'text-stampede-red', 'bg-stampede-red/5');
+                btnB2b.classList.add('border-transparent', 'text-gray-500', 'bg-gray-50');
+
+                document.getElementById('step-buttons-b2b').classList.add('hidden');
+                document.getElementById('step-buttons-b2c').classList.remove('hidden');
+
+                document.getElementById('chat-container-b2b').classList.add('hidden');
+                document.getElementById('chat-container-b2c').classList.remove('hidden');
+
+                document.getElementById('panel-salesforce').classList.add('hidden');
+                document.getElementById('panel-cart').classList.remove('hidden');
+
+                setScriptStepB2C(1);
+            }
+            lucide.createIcons();
         }
 
         function setScriptStep(step) {
@@ -595,6 +774,78 @@
                 document.getElementById('crm-field-email').classList.add('bg-stampede-red/10', 'border-stampede-red/30');
                 successBadge.classList.remove('hidden');
             }
+        }
+
+        function setScriptStepB2C(step) {
+            // Reset all B2C step buttons
+            document.querySelectorAll('.step-btn-b2c').forEach(btn => {
+                btn.classList.remove('bg-stampede-red', 'text-white', 'border-stampede-red');
+                btn.classList.add('bg-white', 'text-gray-600', 'border-stampede-border');
+            });
+
+            // Set active step button
+            const activeBtn = document.getElementById('step-btn-b2c-' + step);
+            activeBtn.classList.add('bg-stampede-red', 'text-white', 'border-stampede-red');
+            activeBtn.classList.remove('bg-white', 'text-gray-600', 'border-stampede-border');
+
+            // Update chat title & status
+            const titles = {
+                1: "Step 1: Multi-Intent Request",
+                2: "Step 2: Contextual Q&A",
+                3: "Step 3: Auto-Cart Adjustment"
+            };
+            const statuses = {
+                1: "NLU Parsing Active",
+                2: "Context-Aware Q&A Active",
+                3: "Client-Side Cart API Triggered"
+            };
+            document.getElementById('chat-title').innerText = titles[step];
+            document.getElementById('chat-status').innerText = statuses[step];
+
+            // Show appropriate chat bubbles
+            document.getElementById('chat-step-b2c-1').classList.add('hidden');
+            document.getElementById('chat-step-b2c-2').classList.add('hidden');
+            document.getElementById('chat-step-b2c-3').classList.add('hidden');
+
+            if (step >= 1) {
+                document.getElementById('chat-step-b2c-1').classList.remove('hidden');
+            }
+            if (step >= 2) {
+                document.getElementById('chat-step-b2c-2').classList.remove('hidden');
+            }
+            if (step >= 3) {
+                document.getElementById('chat-step-b2c-3').classList.remove('hidden');
+            }
+
+            // Update Cart UI
+            const cartGa = document.getElementById('cart-item-ga');
+            const cartRodeo = document.getElementById('cart-item-rodeo');
+            const cartSubtotal = document.getElementById('cart-subtotal');
+            const cartTotal = document.getElementById('cart-total');
+            const cartSuccessBadge = document.getElementById('cart-success-badge');
+
+            if (step === 1) {
+                cartGa.classList.remove('hidden');
+                cartRodeo.classList.remove('hidden');
+                cartSubtotal.innerText = "$280.00";
+                cartTotal.innerText = "$280.00";
+                cartSuccessBadge.classList.remove('hidden');
+                cartSuccessBadge.innerHTML = `<i data-lucide="check-circle" class="w-4 h-4 text-green-600"></i> Cart Populated Automatically!`;
+            } else if (step === 2) {
+                cartGa.classList.remove('hidden');
+                cartRodeo.classList.remove('hidden');
+                cartSubtotal.innerText = "$280.00";
+                cartTotal.innerText = "$280.00";
+                cartSuccessBadge.classList.add('hidden');
+            } else if (step === 3) {
+                cartGa.classList.add('hidden');
+                cartRodeo.classList.remove('hidden');
+                cartSubtotal.innerText = "$180.00";
+                cartTotal.innerText = "$180.00";
+                cartSuccessBadge.classList.remove('hidden');
+                cartSuccessBadge.innerHTML = `<i data-lucide="check-circle" class="w-4 h-4 text-green-600"></i> Cart Adjusted Automatically!`;
+            }
+            lucide.createIcons();
         }
 
         // Initialize Lucide Icons
