@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calgary Stampede - Agentic Demo Proposal</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        stampede: {
+                            red: '#C8102E',
+                            darkRed: '#8A0E1C',
+                            gold: '#D4AF37',
+                            lightGold: '#F4E0A5',
+                            cream: '#FAF6F0',
+                            charcoal: '#1E1E1E',
+                            darkCharcoal: '#121212',
+                            cardBg: '#FFFFFF',
+                            border: '#E5E5E5'
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['"Playfair Display"', 'serif'],
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #FAF6F0;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #C8102E;
+            border-radius: 3px;
+        }
+        .chat-bubble-user {
+            background-color: #FAF6F0;
+            border: 1px solid #E5E5E5;
+            color: #1E1E1E;
+        }
+        .chat-bubble-agent {
+            background-color: #C8102E;
+            color: #FFFFFF;
+        }
+    </style>
+</head>
+<body class="bg-stampede-cream text-stampede-charcoal font-sans antialiased min-h-screen flex flex-col">
+
+    <!-- Header / Hero Section -->
+    <header class="relative bg-stampede-darkRed text-white overflow-hidden border-b-4 border-stampede-gold">
+        <!-- Western Pattern Overlay (Simulated via SVG) -->
+        <div class="absolute inset-0 opacity-10 pointer-events-none">
+            <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                        <path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" stroke-width="1"/>
+                        <circle cx="20" cy="20" r="2" fill="white"/>
+                    </pattern>
+                </defs>
+                <rect width="100%" height="100%" fill="url(#grid)" />
+            </svg>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-6 py-12 md:py-20 relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-8">
+            <div class="max-w-3xl">
+                <div class="inline-flex items-center gap-2 bg-stampede-red text-white text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider mb-4 border border-stampede-gold/30">
+                    <i data-lucide="award" class="w-3.5 h-3.5 text-stampede-gold"></i> Executive Proposal
+                </div>
+                <h1 class="text-4xl md:text-6xl font-serif font-bold tracking-tight mb-4">
+                    The Greatest Agentic Show <br class="hidden md:inline">on Earth
+                </h1>
+                <p class="text-lg md:text-xl text-stampede-lightGold/90 font-light max-w-2xl leading-relaxed">
+                    A proposal for an Agentforce-powered conversational planner and Salesforce-backed MCP server to revolutionize Calgary Stampede visitor planning and B2B hospitality booking.
+                </p>
+            </div>
+            <div class="flex flex-col items-start md:items-end gap-2 shrink-0">
+                <div class="text-xs text-stampede-lightGold uppercase tracking-widest font-semibold">Prepared For</div>
+                <div class="text-xl font-serif font-semibold text-white">Stampede Leadership Team</div>
+                <div class="text-xs text-white/70">June 3, 2026</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Tabs -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 md:px-6 py-8">
+        <!-- Tab Navigation -->
+        <div class="flex border-b border-stampede-border mb-8 overflow-x-auto custom-scrollbar">
+            <button onclick="switchTab('vision')" id="tab-vision" class="tab-btn px-6 py-3 font-medium text-sm border-b-2 border-stampede-red text-stampede-red whitespace-nowrap transition-all flex items-center gap-2">
+                <i data-lucide="compass" class="w-4 h-4"></i> Vision & Architecture
+            </button>
+            <button onclick="switchTab('script')" id="tab-script" class="tab-btn px-6 py-3 font-medium text-sm border-b-2 border-transparent text-gray-500 hover:text-stampede-red whitespace-nowrap transition-all flex items-center gap-2">
+                <i data-lucide="message-square" class="w-4 h-4"></i> Conversational Script
+            </button>
+            <button onclick="switchTab('tech')" id="tab-tech" class="tab-btn px-6 py-3 font-medium text-sm border-b-2 border-transparent text-gray-500 hover:text-stampede-red whitespace-nowrap transition-all flex items-center gap-2">
+                <i data-lucide="code" class="w-4 h-4"></i> Technical Roadmap
+            </button>
+        </div>
+
+        <!-- TAB 1: VISION & ARCHITECTURE -->
+        <div id="content-vision" class="tab-content block space-y-8">
+            <!-- Business Value Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-xl border border-stampede-border shadow-sm hover:shadow-md transition-all">
+                    <div class="w-12 h-12 rounded-lg bg-stampede-red/10 flex items-center justify-center mb-4">
+                        <i data-lucide="sparkles" class="w-6 h-6 text-stampede-red"></i>
+                    </div>
+                    <h3 class="text-lg font-serif font-bold text-stampede-charcoal mb-2">Conversational Planning</h3>
+                    <p class="text-sm text-gray-600 leading-relaxed">
+                        Replaces rigid, frustrating forms and decision trees with an open-ended assistant that understands complex, multi-intent visitor plans naturally.
+                    </p>
+                </div>
+                <div class="bg-white p-6 rounded-xl border border-stampede-border shadow-sm hover:shadow-md transition-all">
+                    <div class="w-12 h-12 rounded-lg bg-stampede-gold/10 flex items-center justify-center mb-4">
+                        <i data-lucide="trending-up" class="w-6 h-6 text-yellow-600"></i>
+                    </div>
+                    <h3 class="text-lg font-serif font-bold text-stampede-charcoal mb-2">High-Value Lead Capture</h3>
+                    <p class="text-sm text-gray-600 leading-relaxed">
+                        Dynamically extracts corporate event details (group size, preferred date, venue) from natural conversations and instantly inserts high-priority leads in Salesforce.
+                    </p>
+                </div>
+                <div class="bg-white p-6 rounded-xl border border-stampede-border shadow-sm hover:shadow-md transition-all">
+                    <div class="w-12 h-12 rounded-lg bg-stampede-darkRed/10 flex items-center justify-center mb-4">
+                        <i data-lucide="cpu" class="w-6 h-6 text-stampede-darkRed"></i>
+                    </div>
+                    <h3 class="text-lg font-serif font-bold text-stampede-charcoal mb-2">Future-Proof MCP Layer</h3>
+                    <p class="text-sm text-gray-600 leading-relaxed">
+                        Exposes live Salesforce ticket inventory and event catalogs directly to external AI clients like Google Gemini using the Model Context Protocol.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Architecture Diagram -->
+            <div class="bg-white p-6 md:p-8 rounded-xl border border-stampede-border shadow-sm">
+                <h3 class="text-xl font-serif font-bold text-stampede-charcoal mb-6 flex items-center gap-2">
+                    <i data-lucide="network" class="text-stampede-red"></i> System Architecture
+                </h3>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 relative">
+                    <!-- Layer 1 -->
+                    <div class="bg-stampede-cream/50 p-5 rounded-lg border border-stampede-border flex flex-col justify-between">
+                        <div>
+                            <div class="text-xs font-bold text-stampede-red uppercase tracking-wider mb-2">1. Experience Layer</div>
+                            <h4 class="font-serif font-bold text-base mb-2">Visitor Touchpoints</h4>
+                            <p class="text-xs text-gray-500 mb-4">Where customers interact with the Stampede brand.</p>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="bg-white p-3 rounded border border-stampede-border text-xs font-medium flex items-center gap-2">
+                                <i data-lucide="globe" class="w-3.5 h-3.5 text-blue-500"></i> Stampede Website
+                            </div>
+                            <div class="bg-white p-3 rounded border border-stampede-border text-xs font-medium flex items-center gap-2">
+                                <i data-lucide="bot" class="w-3.5 h-3.5 text-purple-500"></i> Google Gemini (External)
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Layer 2 -->
+                    <div class="bg-stampede-cream/50 p-5 rounded-lg border border-stampede-border flex flex-col justify-between">
+                        <div>
+                            <div class="text-xs font-bold text-stampede-red uppercase tracking-wider mb-2">2. Agent Layer</div>
+                            <h4 class="font-serif font-bold text-base mb-2">Conversational AI</h4>
+                            <p class="text-xs text-gray-500 mb-4">Orchestrates dialogues, parses intent, and extracts slots.</p>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="bg-white p-3 rounded border border-stampede-border text-xs font-medium flex items-center gap-2">
+                                <i data-lucide="cpu" class="w-3.5 h-3.5 text-stampede-red"></i> Agentforce Agent
+                            </div>
+                            <div class="bg-white p-3 rounded border border-stampede-border text-xs font-medium flex items-center gap-2">
+                                <i data-lucide="server" class="w-3.5 h-3.5 text-yellow-600"></i> Stampede MCP Server
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Layer 3 -->
+                    <div class="bg-stampede-cream/50 p-5 rounded-lg border border-stampede-border flex flex-col justify-between">
+                        <div>
+                            <div class="text-xs font-bold text-stampede-red uppercase tracking-wider mb-2">3. Integration Layer</div>
+                            <h4 class="font-serif font-bold text-base mb-2">API Connectivity</h4>
+                            <p class="text-xs text-gray-500 mb-4">Securely bridges agents to backend systems.</p>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="bg-white p-3 rounded border border-stampede-border text-xs font-medium flex items-center gap-2">
+                                <i data-lucide="link" class="w-3.5 h-3.5 text-green-600"></i> JSforce Client
+                            </div>
+                            <div class="bg-white p-3 rounded border border-stampede-border text-xs font-medium flex items-center gap-2">
+                                <i data-lucide="database" class="w-3.5 h-3.5 text-indigo-600"></i> Mock DB Fallback
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Layer 4 -->
+                    <div class="bg-stampede-cream/50 p-5 rounded-lg border border-stampede-border flex flex-col justify-between">
+                        <div>
+                            <div class="text-xs font-bold text-stampede-red uppercase tracking-wider mb-2">4. Platform Layer</div>
+                            <h4 class="font-serif font-bold text-base mb-2">Salesforce CRM</h4>
+                            <p class="text-xs text-gray-500 mb-4">The single source of truth for inventory and leads.</p>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="bg-white p-3 rounded border border-stampede-border text-xs font-medium flex items-center gap-2">
+                                <i data-lucide="users" class="w-3.5 h-3.5 text-stampede-red"></i> Leads (Private Events)
+                            </div>
+                            <div class="bg-white p-3 rounded border border-stampede-border text-xs font-medium flex items-center gap-2">
+                                <i data-lucide="ticket" class="w-3.5 h-3.5 text-stampede-gold"></i> Bookings & Inventory
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: CONVERSATIONAL SCRIPT -->
+        <div id="content-script" class="tab-content hidden space-y-8">
+            <!-- Script Intro -->
+            <div class="bg-white p-6 rounded-xl border border-stampede-border shadow-sm">
+                <h3 class="text-xl font-serif font-bold text-stampede-charcoal mb-2">Conversational Demo Walkthrough</h3>
+                <p class="text-sm text-gray-600 leading-relaxed">
+                    This interactive script simulator demonstrates a natural, friction-free interaction. Instead of forcing the user through rigid forms, the agent handles multi-intent statements, answers contextual Q&A mid-conversation, and dynamically extracts structured data to write to Salesforce.
+                </p>
+            </div>
+
+            <!-- Chat Simulator Preview -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Left: Conversation Flow -->
+                <div class="lg:col-span-2 space-y-6">
+                    <!-- Interactive Step Buttons -->
+                    <div class="flex gap-2 border-b border-stampede-border pb-4">
+                        <button onclick="setScriptStep(1)" id="step-btn-1" class="step-btn px-4 py-2 text-xs font-bold rounded-full bg-stampede-red text-white border border-stampede-red transition-all">
+                            Step 1: Multi-Intent Opening
+                        </button>
+                        <button onclick="setScriptStep(2)" id="step-btn-2" class="step-btn px-4 py-2 text-xs font-medium rounded-full bg-white text-gray-600 border border-stampede-border hover:text-stampede-red transition-all">
+                            Step 2: Context Q&A
+                        </button>
+                        <button onclick="setScriptStep(3)" id="step-btn-3" class="step-btn px-4 py-2 text-xs font-medium rounded-full bg-white text-gray-600 border border-stampede-border hover:text-stampede-red transition-all">
+                            Step 3: Slot Extraction
+                        </button>
+                    </div>
+
+                    <!-- Chat Container -->
+                    <div class="bg-white rounded-xl border border-stampede-border overflow-hidden shadow-sm">
+                        <div class="bg-gray-50 px-6 py-3 border-b border-stampede-border flex justify-between items-center">
+                            <span class="text-xs font-bold text-stampede-red uppercase tracking-wider" id="chat-title">Step 1: Multi-Intent Opening</span>
+                            <span class="text-xs text-gray-400 font-mono" id="chat-status">NLU Parsing Active</span>
+                        </div>
+                        
+                        <!-- Chat Bubbles Container -->
+                        <div class="p-6 space-y-6" id="chat-bubbles">
+                            <!-- Step 1 Content (Default) -->
+                            <div class="space-y-6" id="chat-step-1">
+                                <div class="flex items-start gap-3 max-w-[85%]">
+                                    <div class="w-8 h-8 rounded-full bg-stampede-gold flex items-center justify-center shrink-0 text-xs font-bold text-stampede-charcoal">U</div>
+                                    <div class="chat-bubble-user p-4 rounded-2xl rounded-tl-none text-sm leading-relaxed shadow-sm">
+                                        "Hey there! I'm planning a corporate outing for about 45 people during the Stampede. We want to see the Evening Show but also want a private space with catering. What do you recommend?"
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-3 max-w-[85%] ml-auto flex-row-reverse">
+                                    <div class="w-8 h-8 rounded-full bg-stampede-red flex items-center justify-center shrink-0 text-xs font-bold text-white">A</div>
+                                    <div class="chat-bubble-agent p-4 rounded-2xl rounded-tr-none text-sm leading-relaxed shadow-sm">
+                                        "Howdy! That sounds like an unforgettable corporate outing. For a group of 45 looking for a private space with catering for the Evening Show, I highly recommend our premium <strong>Infield Suites</strong>—they sit right in the heart of the action with private catering and a spectacular view of the chuckwagons and fireworks.<br><br>Alternatively, we could look at a semi-private <strong>Reserved Table Bundle at Ranchman's</strong>. Let me check the live Salesforce inventory for you. Do you have a specific date in mind, or are you flexible?"
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Step 2 Content (Hidden by default) -->
+                            <div class="space-y-6 hidden" id="chat-step-2">
+                                <div class="flex items-start gap-3 max-w-[85%]">
+                                    <div class="w-8 h-8 rounded-full bg-stampede-gold flex items-center justify-center shrink-0 text-xs font-bold text-stampede-charcoal">U</div>
+                                    <div class="chat-bubble-user p-4 rounded-2xl rounded-tl-none text-sm leading-relaxed shadow-sm">
+                                        "We're looking at July 9th or 10th. By the way, is there a dress code for the Infield Suites? Some of our clients are coming straight from a conference."
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-3 max-w-[85%] ml-auto flex-row-reverse">
+                                    <div class="w-8 h-8 rounded-full bg-stampede-red flex items-center justify-center shrink-0 text-xs font-bold text-white">A</div>
+                                    <div class="chat-bubble-agent p-4 rounded-2xl rounded-tr-none text-sm leading-relaxed shadow-sm">
+                                        "No dress code to worry about! While many folks love to wear their favorite western boots and cowboy hats, business casual or conference attire is perfectly fine. We want everyone to feel comfortable!<br><br>Now, looking at our live Salesforce inventory for July 9th and 10th: I see we have an <strong>Infield Suite</strong> available on <strong>July 9th</strong>, but July 10th is currently sold out. For July 10th, we do have semi-private tables at Ranchman's.<br><br>Would you like me to create a high-priority corporate lead in Salesforce for the July 9th Infield Suite so our VIP coordinator can lock it in for you?"
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Step 3 Content (Hidden by default) -->
+                            <div class="space-y-6 hidden" id="chat-step-3">
+                                <div class="flex items-start gap-3 max-w-[85%]">
+                                    <div class="w-8 h-8 rounded-full bg-stampede-gold flex items-center justify-center shrink-0 text-xs font-bold text-stampede-charcoal">U</div>
+                                    <div class="chat-bubble-user p-4 rounded-2xl rounded-tl-none text-sm leading-relaxed shadow-sm">
+                                        "Yes, July 9th for the Infield Suite sounds perfect. Let's do that. My name is Sarah Jenkins, email is sarah@acme.com, company is Acme Corp."
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-3 max-w-[85%] ml-auto flex-row-reverse">
+                                    <div class="w-8 h-8 rounded-full bg-stampede-red flex items-center justify-center shrink-0 text-xs font-bold text-white">A</div>
+                                    <div class="chat-bubble-agent p-4 rounded-2xl rounded-tr-none text-sm leading-relaxed shadow-sm">
+                                        "Awesome, Sarah! I've captured all the details and created a high-priority corporate lead in Salesforce (Reference: <strong>LD-2026-8802</strong>).<br><br>Here is what I've registered:<br>• <strong>Contact:</strong> Sarah Jenkins<br>• <strong>Company:</strong> Acme Corp<br>• <strong>Email:</strong> sarah@acme.com<br>• <strong>Venue:</strong> Infield Suites<br>• <strong>Date:</strong> July 9, 2026<br>• <strong>Group Size:</strong> 45<br><br>A Stampede VIP Event Coordinator will reach out to you at sarah@acme.com to customize your catering menu and finalize the contract. Is there anything else I can help you plan today?"
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Salesforce CRM Real-time Extraction -->
+                <div class="space-y-6">
+                    <div class="bg-stampede-charcoal text-white p-6 rounded-xl border border-stampede-gold/30 shadow-lg sticky top-6">
+                        <div class="flex items-center gap-2 mb-4 text-stampede-gold border-b border-white/10 pb-3">
+                            <i data-lucide="database" class="w-5 h-5"></i>
+                            <h4 class="font-serif font-bold text-lg">Salesforce CRM Console</h4>
+                        </div>
+                        <p class="text-xs text-gray-400 mb-6 leading-relaxed">
+                            Watch how unstructured conversations are instantly structured and written to Salesforce CRM fields in real-time.
+                        </p>
+
+                        <div class="space-y-4">
+                            <div class="bg-white/5 p-3.5 rounded border border-white/10 transition-all" id="crm-field-name">
+                                <div class="text-[10px] text-stampede-gold uppercase tracking-wider font-bold mb-1">Lead Name</div>
+                                <div class="text-sm font-medium text-white" id="val-name">—</div>
+                            </div>
+                            <div class="bg-white/5 p-3.5 rounded border border-white/10 transition-all" id="crm-field-company">
+                                <div class="text-[10px] text-stampede-gold uppercase tracking-wider font-bold mb-1">Company</div>
+                                <div class="text-sm font-medium text-white" id="val-company">—</div>
+                            </div>
+                            <div class="bg-white/5 p-3.5 rounded border border-white/10 transition-all" id="crm-field-email">
+                                <div class="text-[10px] text-stampede-gold uppercase tracking-wider font-bold mb-1">Email</div>
+                                <div class="text-sm font-medium text-white" id="val-email">—</div>
+                            </div>
+                            <div class="bg-white/5 p-3.5 rounded border border-white/10 transition-all" id="crm-field-date">
+                                <div class="text-[10px] text-stampede-gold uppercase tracking-wider font-bold mb-1">Preferred Date</div>
+                                <div class="text-sm font-medium text-white" id="val-date">—</div>
+                            </div>
+                            <div class="bg-white/5 p-3.5 rounded border border-white/10 transition-all" id="crm-field-venue">
+                                <div class="text-[10px] text-stampede-gold uppercase tracking-wider font-bold mb-1">Venue</div>
+                                <div class="text-sm font-medium text-white" id="val-venue">—</div>
+                            </div>
+                            <div class="bg-white/5 p-3.5 rounded border border-white/10 transition-all" id="crm-field-size">
+                                <div class="text-[10px] text-stampede-gold uppercase tracking-wider font-bold mb-1">Group Size</div>
+                                <div class="text-sm font-medium text-white" id="val-size">—</div>
+                            </div>
+                            <div class="bg-green-900/20 text-green-400 p-3 rounded border border-green-800/50 text-xs font-semibold flex items-center gap-2 mt-4 hidden" id="crm-success-badge">
+                                <i data-lucide="check-circle" class="w-4 h-4"></i> Lead Inserted Successfully
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: TECHNICAL ROADMAP -->
+        <div id="content-tech" class="tab-content hidden space-y-8">
+            <!-- File Structure & Deliverables -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- File Structure -->
+                <div class="bg-white p-6 rounded-xl border border-stampede-border shadow-sm">
+                    <h3 class="text-xl font-serif font-bold text-stampede-charcoal mb-4 flex items-center gap-2">
+                        <i data-lucide="folder-tree" class="text-stampede-red"></i> Project Structure
+                    </h3>
+                    
+                    <div class="bg-stampede-cream/50 p-4 rounded-lg font-mono text-xs text-stampede-charcoal overflow-x-auto">
+                        <div class="text-stampede-red font-bold">stampede-agentic-demo/</div>
+                        <div class="pl-4">├── <span class="text-blue-600">mcp-server/</span> <span class="text-gray-400"># Node.js MCP Server</span></div>
+                        <div class="pl-8">├── package.json</div>
+                        <div class="pl-8">├── tsconfig.json</div>
+                        <div class="pl-8">├── src/</div>
+                        <div class="pl-12">├── <span class="font-semibold">salesforce.ts</span> <span class="text-gray-400"># JSforce client + mock fallback</span></div>
+                        <div class="pl-12">└── <span class="font-semibold">index.ts</span> <span class="text-gray-400"># MCP server tool handlers</span></div>
+                        <div class="pl-4">├── <span class="text-blue-600">website/</span> <span class="text-gray-400"># React Frontend</span></div>
+                        <div class="pl-8">├── package.json</div>
+                        <div class="pl-8">├── vite.config.ts</div>
+                        <div class="pl-8">├── tailwind.config.js</div>
+                        <div class="pl-8">├── index.html</div>
+                        <div class="pl-8">├── src/</div>
+                        <div class="pl-12">├── main.tsx</div>
+                        <div class="pl-12">├── App.tsx <span class="text-gray-400"># Stampede Website + Split Console Layout</span></div>
+                        <div class="pl-12">├── components/</div>
+                        <div class="pl-16">├── <span class="font-semibold">AgentforceChat.tsx</span> <span class="text-gray-400"># Conversational widget</span></div>
+                        <div class="pl-16">└── <span class="font-semibold">SalesforceConsole.tsx</span> <span class="text-gray-400"># CRM Dashboard</span></div>
+                        <div class="pl-4">└── <span class="font-bold text-green-600">README.md</span> <span class="text-gray-400"># Setup & Running instructions</span></div>
+                    </div>
+                </div>
+
+                <!-- Implementation Checklist -->
+                <div class="bg-white p-6 rounded-xl border border-stampede-border shadow-sm">
+                    <h3 class="text-xl font-serif font-bold text-stampede-charcoal mb-4 flex items-center gap-2">
+                        <i data-lucide="check-square" class="text-stampede-red"></i> Implementation Roadmap
+                    </h3>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-start gap-3">
+                            <div class="w-5 h-5 rounded bg-stampede-red/10 flex items-center justify-center shrink-0 mt-0.5">
+                                <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-stampede-red"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-bold text-stampede-charcoal">1. Setup Directories</h4>
+                                <p class="text-xs text-gray-500">Configure package.json files and install dependencies for both frontend and backend.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <div class="w-5 h-5 rounded bg-stampede-red/10 flex items-center justify-center shrink-0 mt-0.5">
+                                <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-stampede-red"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-bold text-stampede-charcoal">2. Implement Salesforce Client</h4>
+                                <p class="text-xs text-gray-500">Write the JSforce connection module with robust mock fallback database for easy offline presentation.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <div class="w-5 h-5 rounded bg-stampede-red/10 flex items-center justify-center shrink-0 mt-0.5">
+                                <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-stampede-red"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-bold text-stampede-charcoal">3. Build MCP Server</h4>
+                                <p class="text-xs text-gray-500">Expose tools (get_event_catalog, check_ticket_availability, create_private_event_lead) using official MCP SDK.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <div class="w-5 h-5 rounded bg-stampede-red/10 flex items-center justify-center shrink-0 mt-0.5">
+                                <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-stampede-red"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-bold text-stampede-charcoal">4. Create Conversational Frontend</h4>
+                                <p class="text-xs text-gray-500">Build the React website and Agentforce widget with custom NLU simulator for context-switching and slot-filling.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Future MCP Integration with Gemini -->
+            <div class="bg-white p-6 md:p-8 rounded-xl border border-stampede-border shadow-sm">
+                <h3 class="text-xl font-serif font-bold text-stampede-charcoal mb-4 flex items-center gap-2">
+                    <i data-lucide="sparkles" class="text-stampede-gold"></i> Future Agentic Connectivity (MCP + Gemini)
+                </h3>
+                <p class="text-sm text-gray-600 leading-relaxed mb-6">
+                    By implementing the Model Context Protocol, we can allow external LLMs (like Google Gemini) to securely query and interact with our Salesforce data. Here is an example of the tools our MCP server will register:
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-stampede-cream/30 p-4 rounded-lg border border-stampede-border">
+                        <div class="font-mono text-xs font-bold text-stampede-red mb-2">get_event_catalog()</div>
+                        <p class="text-xs text-gray-500 leading-relaxed">
+                            Queries Salesforce for active Stampede events, descriptions, pricing, and venue capacities.
+                        </p>
+                    </div>
+                    <div class="bg-stampede-cream/30 p-4 rounded-lg border border-stampede-border">
+                        <div class="font-mono text-xs font-bold text-stampede-red mb-2">check_ticket_availability(date)</div>
+                        <p class="text-xs text-gray-500 leading-relaxed">
+                            Checks real-time ticket inventory and venue availability in Salesforce for a given date.
+                        </p>
+                    </div>
+                    <div class="bg-stampede-cream/30 p-4 rounded-lg border border-stampede-border">
+                        <div class="font-mono text-xs font-bold text-stampede-red mb-2">create_private_event_lead(...)</div>
+                        <p class="text-xs text-gray-500 leading-relaxed">
+                            Inserts a high-priority corporate lead record directly into Salesforce CRM with extracted details.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-stampede-charcoal text-white/60 text-xs py-8 border-t border-white/10 mt-12">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-2">
+                <span class="font-serif font-bold text-white text-sm">Calgary Stampede</span>
+                <span class="text-white/30">|</span>
+                <span>Agentic Demo Proposal 2026</span>
+            </div>
+            <div class="flex gap-6">
+                <span class="text-stampede-gold font-medium">Powered by Salesforce Agentforce & MCP</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Tab & Interactive Script -->
+    <script>
+        function switchTab(tabId) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.add('hidden');
+                content.classList.remove('block');
+            });
+
+            // Remove active styles from all tabs
+            document.querySelectorAll('.tab-btn').forEach(tab => {
+                tab.classList.remove('border-stampede-red', 'text-stampede-red');
+                tab.classList.add('border-transparent', 'text-gray-500');
+            });
+
+            // Show active tab content
+            const activeContent = document.getElementById('content-' + tabId);
+            activeContent.classList.remove('hidden');
+            activeContent.classList.add('block');
+
+            // Add active styles to active tab button
+            const activeTab = document.getElementById('tab-' + tabId);
+            activeTab.classList.add('border-stampede-red', 'text-stampede-red');
+            activeTab.classList.remove('border-transparent', 'text-gray-500');
+        }
+
+        function setScriptStep(step) {
+            // Reset all step buttons
+            document.querySelectorAll('.step-btn').forEach(btn => {
+                btn.classList.remove('bg-stampede-red', 'text-white', 'border-stampede-red');
+                btn.classList.add('bg-white', 'text-gray-600', 'border-stampede-border');
+            });
+
+            // Set active step button
+            const activeBtn = document.getElementById('step-btn-' + step);
+            activeBtn.classList.add('bg-stampede-red', 'text-white', 'border-stampede-red');
+            activeBtn.classList.remove('bg-white', 'text-gray-600', 'border-stampede-border');
+
+            // Update chat title & status
+            const titles = {
+                1: "Step 1: Multi-Intent Opening",
+                2: "Step 2: Context Q&A",
+                3: "Step 3: Slot Extraction"
+            };
+            const statuses = {
+                1: "NLU Parsing Active",
+                2: "Context-Aware Q&A Active",
+                3: "Dynamic Slot Extraction Active"
+            };
+            document.getElementById('chat-title').innerText = titles[step];
+            document.getElementById('chat-status').innerText = statuses[step];
+
+            // Show appropriate chat bubbles
+            document.getElementById('chat-step-1').classList.add('hidden');
+            document.getElementById('chat-step-2').classList.add('hidden');
+            document.getElementById('chat-step-3').classList.add('hidden');
+
+            // Show up to the current step
+            if (step >= 1) {
+                document.getElementById('chat-step-1').classList.remove('hidden');
+            }
+            if (step >= 2) {
+                document.getElementById('chat-step-2').classList.remove('hidden');
+            }
+            if (step >= 3) {
+                document.getElementById('chat-step-3').classList.remove('hidden');
+            }
+
+            // Update Salesforce CRM Fields
+            const valName = document.getElementById('val-name');
+            const valCompany = document.getElementById('val-company');
+            const valEmail = document.getElementById('val-email');
+            const valDate = document.getElementById('val-date');
+            const valVenue = document.getElementById('val-venue');
+            const valSize = document.getElementById('val-size');
+            const successBadge = document.getElementById('crm-success-badge');
+
+            // Reset fields
+            valName.innerText = "—";
+            valCompany.innerText = "—";
+            valEmail.innerText = "—";
+            valDate.innerText = "—";
+            valVenue.innerText = "—";
+            valSize.innerText = "—";
+            successBadge.classList.add('hidden');
+
+            // Highlight fields based on step
+            document.getElementById('crm-field-name').classList.remove('bg-stampede-red/10', 'border-stampede-red/30');
+            document.getElementById('crm-field-company').classList.remove('bg-stampede-red/10', 'border-stampede-red/30');
+            document.getElementById('crm-field-email').classList.remove('bg-stampede-red/10', 'border-stampede-red/30');
+            document.getElementById('crm-field-date').classList.remove('bg-stampede-red/10', 'border-stampede-red/30');
+            document.getElementById('crm-field-venue').classList.remove('bg-stampede-red/10', 'border-stampede-red/30');
+            document.getElementById('crm-field-size').classList.remove('bg-stampede-red/10', 'border-stampede-red/30');
+
+            if (step >= 1) {
+                valVenue.innerText = "Infield Suites";
+                valSize.innerText = "45";
+                document.getElementById('crm-field-venue').classList.add('bg-stampede-red/10', 'border-stampede-red/30');
+                document.getElementById('crm-field-size').classList.add('bg-stampede-red/10', 'border-stampede-red/30');
+            }
+            if (step >= 2) {
+                valDate.innerText = "July 9, 2026";
+                document.getElementById('crm-field-date').classList.add('bg-stampede-red/10', 'border-stampede-red/30');
+            }
+            if (step >= 3) {
+                valName.innerText = "Sarah Jenkins";
+                valCompany.innerText = "Acme Corp";
+                valEmail.innerText = "sarah@acme.com";
+                document.getElementById('crm-field-name').classList.add('bg-stampede-red/10', 'border-stampede-red/30');
+                document.getElementById('crm-field-company').classList.add('bg-stampede-red/10', 'border-stampede-red/30');
+                document.getElementById('crm-field-email').classList.add('bg-stampede-red/10', 'border-stampede-red/30');
+                successBadge.classList.remove('hidden');
+            }
+        }
+
+        // Initialize Lucide Icons
+        lucide.createIcons();
+    </script>
+</body>
+</html>
