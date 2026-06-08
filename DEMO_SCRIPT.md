@@ -110,42 +110,45 @@ This document outlines the step-by-step narrative for presenting the Calgary Sta
 ### Speaker Narrative
 > "Now, let's look at a simpler, transactional request. What if a customer just wants to buy tickets for their family? In a traditional e-commerce flow, they have to navigate to the ticket page, select General Admission, choose a date, add to cart, go back, find Rodeo tickets, select the afternoon session, add to cart, and then check out. 
 > 
-> With Agentforce, the agent can perform these actions *for* the customer. But more importantly, the agent can answer contextual questions and dynamically adjust the cart based on the conversation."
+> With Agentforce, the agent can perform these actions *for* the customer. But more importantly, the agent acts as a true **digital advisor**. If the customer makes a request that contains a mistake or redundant purchases, the agent proactively catches the error and validates it with them—just like an experienced human advisor would."
 
 ### Action on Screen
 1. Toggle the Chat Widget to **B2C Mode**.
-2. **Step 1: Multi-Intent Request**: The presenter types a direct request:
+2. **Step 1: Multi-Intent Request & Proactive Validation**: The presenter types a direct request:
    > **User:** *"Hey! I'm planning a trip with my family of 4 on July 9th. Can we get 4 general admission tickets and also add 4 afternoon Rodeo tickets?"*
 3. Click **Send**.
-4. The Agent responds instantly, confirming the action:
-   > *"Howdy! I'd love to help you with that. I've checked our live inventory for July 9th, and we have both General Admission and Rodeo tickets available. 
+4. The Agent responds instantly, proactively flagging the redundancy:
+   > *"Howdy! I'd love to help you plan that family trip. I can certainly add both to your cart, but as your digital advisor, I want to double-check: **did you know that your Afternoon Rodeo passes actually include full-day admission to the Stampede grounds?** 
    > 
-   > I've gone ahead and automatically added **4 General Admission tickets ($100.00)** and **4 Afternoon Rodeo tickets ($180.00)** to your cart! You can see them in your cart on the right. 
-   > 
-   > Is there anything else I can add for you?"*
+   > Since you asked for both, you'd be double-paying for grounds access. Would you prefer to just get the 4 Rodeo passes to save $100.00, or did you need separate general admission tickets for some other reason?"*
 5. Highlight the **Shopping Cart Panel** on the website:
-   - Point out that **4x General Admission ($100.00)** and **4x Rodeo Afternoon Passes ($180.00)** have been added automatically.
+   - Point out that **4x General Admission ($100.00)** and **4x Rodeo Afternoon Passes ($180.00)** have been added to the cart, but a prominent **"⚠️ Redundant Grounds Admission Detected"** warning badge is displayed.
    - Total is **$280.00**.
-6. **Step 2: Contextual Q&A**: The presenter asks a clarifying question:
-   > **User:** *"Wait, does the Rodeo ticket include admission to the grounds, or do we need both?"*
+6. **Step 2: Cart Optimization Confirmation**: The presenter confirms the optimization:
+   > **User:** *"Oh, wow! I had no idea the Rodeo tickets covered grounds entry. Yes, please remove the general admission tickets and just keep the 4 Rodeo passes. That saves us $100!"*
 7. Click **Send**.
-8. The Agent answers and offers to adjust the cart:
-   > *"Great question! Yes, your Afternoon Rodeo ticket actually includes admission to the Stampede grounds for the entire day, so you don't need separate General Admission tickets! 
+8. The Agent answers and adjusts the cart:
+   > *"You bet! I've automatically updated your cart to remove the 4 General Admission tickets. 
    > 
-   > Would you like me to adjust your cart to remove the 4 General Admission tickets so you aren't double-paying?"*
-9. **Step 3: Auto-Cart Adjustment**: The presenter confirms:
-   > **User:** *"Oh, perfect! Yes, please remove the general admission tickets and just keep the 4 Rodeo passes."*
-10. Click **Send**.
-11. The Agent confirms and updates the cart:
-    > *"You got it! I've updated your cart to remove the 4 General Admission tickets. 
+   > Your cart now contains just **4 Afternoon Rodeo tickets** (with grounds admission fully included) for a new total of **$180.00**. 
+   > 
+   > Since you're coming on July 9th, would you like me to also add a parking pass or recommend some family-friendly food stands?"*
+9. Highlight the **Shopping Cart Panel**:
+   - Show that the **4x General Admission** tickets have been automatically removed.
+   - Only **4x Rodeo Afternoon Passes ($180.00)** remain.
+   - Total is now **$180.00**, and the warning badge has disappeared.
+10. **Step 3: Value-Add Upsell & Contextual Q&A**: The presenter accepts the upsell:
+    > **User:** *"Yes, a parking pass would be great! Also, what time should we arrive for the afternoon Rodeo?"*
+11. Click **Send**.
+12. The Agent confirms and updates the cart:
+    > *"Perfect, I've added a **Day Parking Pass ($25.00)** to your cart! 
     > 
-    > Your cart now contains just **4 Afternoon Rodeo tickets** (with grounds admission included) for a new total of **$180.00**. 
+    > Regarding timing: the Afternoon Rodeo starts at 1:30 PM, but since grounds admission is included, I highly recommend arriving around 11:30 AM to enjoy the exhibits and grab some lunch first! The Erlton Gate is the closest entrance to the Rodeo grandstand. 
     > 
-    > I'm ready to help you check out whenever you are!"*
-12. Highlight the **Shopping Cart Panel**:
-    - Show that the **4x General Admission** tickets have been automatically removed.
-    - Only **4x Rodeo Afternoon Passes ($180.00)** remain.
-    - Total is now **$180.00**, ready for checkout.
+    > Your updated total is **$205.00**. I'm ready to help you check out whenever you are!"*
+13. Highlight the **Shopping Cart Panel**:
+    - Show that the **1x Day Parking Pass ($25.00)** has been added.
+    - Total is now **$205.00**, ready for checkout.
 
 ---
 

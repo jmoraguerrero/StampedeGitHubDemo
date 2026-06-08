@@ -141,9 +141,9 @@ export default function StampedeDemoProposal() {
     ];
 
     const stepsB2C = [
-      { id: 1, label: "1. Multi-Intent Request" },
-      { id: 2, label: "2. Contextual Q&A" },
-      { id: 3, label: "3. Auto-Cart Adjustment" }
+      { id: 1, label: "1. Request & Proactive Validation" },
+      { id: 2, label: "2. Cart Optimization" },
+      { id: 3, label: "3. Value-Add Upsell" }
     ];
 
     return (
@@ -257,7 +257,7 @@ export default function StampedeDemoProposal() {
                       </div>
                       <div style={{ background: theme.fill.secondary, padding: "12px", borderRadius: "8px", maxWidth: "85%", alignSelf: "flex-end", borderLeft: `3px solid ${theme.palette.red}` }}>
                         <Text size="small" weight="semibold" style={{ color: theme.palette.red }}>Agentforce Agent:</Text>
-                        <Text size="small">"Howdy! I'd love to help you with that. I've checked our live inventory for July 9th, and we have both General Admission and Rodeo tickets available. I've gone ahead and automatically added <strong>4 General Admission tickets ($100.00)</strong> and <strong>4 Afternoon Rodeo tickets ($180.00)</strong> to your cart! You can see them in your cart on the right. Is there anything else I can add for you?"</Text>
+                        <Text size="small">"Howdy! I'd love to help you plan that family trip. I can certainly add both to your cart, but as your digital advisor, I want to double-check: <strong>did you know that your Afternoon Rodeo passes actually include full-day admission to the Stampede grounds?</strong><br/><br/>Since you asked for both, you'd be double-paying for grounds access. Would you prefer to just get the 4 Rodeo passes to save $100.00, or did you need separate general admission tickets for some other reason?"</Text>
                       </div>
                     </Stack>
                   )}
@@ -267,11 +267,11 @@ export default function StampedeDemoProposal() {
                       <Divider />
                       <div style={{ background: theme.fill.tertiary, padding: "12px", borderRadius: "8px", maxWidth: "85%" }}>
                         <Text size="small" weight="semibold" style={{ color: theme.palette.orange }}>User:</Text>
-                        <Text size="small">"Wait, does the Rodeo ticket include admission to the grounds, or do we need both?"</Text>
+                        <Text size="small">"Oh, wow! I had no idea the Rodeo tickets covered grounds entry. Yes, please remove the general admission tickets and just keep the 4 Rodeo passes. That saves us $100!"</Text>
                       </div>
                       <div style={{ background: theme.fill.secondary, padding: "12px", borderRadius: "8px", maxWidth: "85%", alignSelf: "flex-end", borderLeft: `3px solid ${theme.palette.red}` }}>
                         <Text size="small" weight="semibold" style={{ color: theme.palette.red }}>Agentforce Agent:</Text>
-                        <Text size="small">"Great question! Yes, your Afternoon Rodeo ticket actually includes admission to the Stampede grounds for the entire day, so you don't need separate General Admission tickets! Would you like me to adjust your cart to remove the 4 General Admission tickets so you aren't double-paying?"</Text>
+                        <Text size="small">"You bet! I've automatically updated your cart to remove the 4 General Admission tickets. Your cart now contains just <strong>4 Afternoon Rodeo tickets</strong> (with grounds admission fully included) for a new total of <strong>$180.00</strong>. Since you're coming on July 9th, would you like me to also add a parking pass or recommend some family-friendly food stands?"</Text>
                       </div>
                     </Stack>
                   )}
@@ -281,11 +281,11 @@ export default function StampedeDemoProposal() {
                       <Divider />
                       <div style={{ background: theme.fill.tertiary, padding: "12px", borderRadius: "8px", maxWidth: "85%" }}>
                         <Text size="small" weight="semibold" style={{ color: theme.palette.orange }}>User:</Text>
-                        <Text size="small">"Oh, perfect! Yes, please remove the general admission tickets and just keep the 4 Rodeo passes."</Text>
+                        <Text size="small">"Yes, a parking pass would be great! Also, what time should we arrive for the afternoon Rodeo?"</Text>
                       </div>
                       <div style={{ background: theme.fill.secondary, padding: "12px", borderRadius: "8px", maxWidth: "85%", alignSelf: "flex-end", borderLeft: `3px solid ${theme.palette.red}` }}>
                         <Text size="small" weight="semibold" style={{ color: theme.palette.red }}>Agentforce Agent:</Text>
-                        <Text size="small">"You got it! I've updated your cart to remove the 4 General Admission tickets. Your cart now contains just <strong>4 Afternoon Rodeo tickets</strong> (with grounds admission included) for a new total of <strong>$180.00</strong>. I'm ready to help you check out whenever you are!"</Text>
+                        <Text size="small">"Perfect, I've added a <strong>Day Parking Pass ($25.00)</strong> to your cart!<br/><br/>Regarding timing: the Afternoon Rodeo starts at 1:30 PM, but since grounds admission is included, I highly recommend arriving around 11:30 AM to enjoy the exhibits and grab some lunch first! The Erlton Gate is the closest entrance to the Rodeo grandstand. Your updated total is <strong>$205.00</strong>. I'm ready to help you check out whenever you are!"</Text>
                       </div>
                     </Stack>
                   )}
@@ -345,8 +345,8 @@ export default function StampedeDemoProposal() {
                   <Stack gap={12}>
                     {scriptStepB2C >= 1 && (
                       <Stack gap={8}>
-                        {scriptStepB2C < 3 && (
-                          <div style={{ background: theme.fill.tertiary, padding: "8px 12px", borderRadius: "4px" }}>
+                        {scriptStepB2C === 1 && (
+                          <div style={{ background: theme.fill.tertiary, padding: "8px 12px", borderRadius: "4px", border: `1px solid ${theme.palette.orange || "#D4AF37"}` }}>
                             <Row justify="space-between" align="center">
                               <Stack gap={2}>
                                 <Text size="small" weight="semibold">General Admission</Text>
@@ -354,6 +354,11 @@ export default function StampedeDemoProposal() {
                               </Stack>
                               <Text size="small" weight="bold">$100.00</Text>
                             </Row>
+                            <div style={{ marginTop: "6px", background: "rgba(212, 175, 55, 0.1)", padding: "4px 8px", borderRadius: "3px" }}>
+                              <Text size="xs" style={{ color: theme.palette.orange || "#D4AF37", fontWeight: "semibold" }}>
+                                ⚠️ Redundant grounds admission detected
+                              </Text>
+                            </div>
                           </div>
                         )}
                         <div style={{ background: theme.fill.tertiary, padding: "8px 12px", borderRadius: "4px" }}>
@@ -365,18 +370,34 @@ export default function StampedeDemoProposal() {
                             <Text size="small" weight="bold">$180.00</Text>
                           </Row>
                         </div>
+                        {scriptStepB2C === 3 && (
+                          <div style={{ background: theme.fill.tertiary, padding: "8px 12px", borderRadius: "4px" }}>
+                            <Row justify="space-between" align="center">
+                              <Stack gap={2}>
+                                <Text size="small" weight="semibold">Day Parking Pass</Text>
+                                <Text size="xs" tone="secondary">Qty: 1</Text>
+                              </Stack>
+                              <Text size="small" weight="bold">$25.00</Text>
+                            </Row>
+                          </div>
+                        )}
                         <Divider />
                         <Row justify="space-between">
                           <Text size="small" tone="secondary">Total</Text>
                           <Text size="small" weight="bold">
-                            {scriptStepB2C === 3 ? "$180.00" : "$280.00"}
+                            {scriptStepB2C === 1 ? "$280.00" : scriptStepB2C === 2 ? "$180.00" : "$205.00"}
                           </Text>
                         </Row>
-                        <Callout tone="success" title={scriptStepB2C === 3 ? "Cart Adjusted" : "Cart Populated"}>
+                        <Callout 
+                          tone={scriptStepB2C === 1 ? "warning" : "success"} 
+                          title={scriptStepB2C === 1 ? "Redundant Items Flagged" : scriptStepB2C === 2 ? "Cart Optimized" : "Parking Pass Added"}
+                        >
                           <Text size="small">
-                            {scriptStepB2C === 3 
-                              ? "The agent automatically adjusted your cart to remove redundant grounds admission." 
-                              : "The agent automatically populated your cart with GA and Rodeo passes."}
+                            {scriptStepB2C === 1 
+                              ? "The agent proactively flagged redundant grounds admission in your request." 
+                              : scriptStepB2C === 2 
+                                ? "The agent automatically adjusted your cart to remove redundant grounds admission, saving you $100.00." 
+                                : "The agent added a Day Parking Pass and provided arrival timing recommendations."}
                           </Text>
                         </Callout>
                       </Stack>

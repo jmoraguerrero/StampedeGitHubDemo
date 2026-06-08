@@ -263,13 +263,13 @@
                     <!-- Interactive Step Buttons for B2C -->
                     <div id="step-buttons-b2c" class="flex gap-2 border-b border-stampede-border pb-4 hidden">
                         <button onclick="setScriptStepB2C(1)" id="step-btn-b2c-1" class="step-btn-b2c px-4 py-2 text-xs font-bold rounded-full bg-stampede-red text-white border border-stampede-red transition-all">
-                            Step 1: Multi-Intent Request
+                            Step 1: Request & Proactive Validation
                         </button>
                         <button onclick="setScriptStepB2C(2)" id="step-btn-b2c-2" class="step-btn-b2c px-4 py-2 text-xs font-medium rounded-full bg-white text-gray-600 border border-stampede-border hover:text-stampede-red transition-all">
-                            Step 2: Contextual Q&A
+                            Step 2: Cart Optimization
                         </button>
                         <button onclick="setScriptStepB2C(3)" id="step-btn-b2c-3" class="step-btn-b2c px-4 py-2 text-xs font-medium rounded-full bg-white text-gray-600 border border-stampede-border hover:text-stampede-red transition-all">
-                            Step 3: Auto-Cart Adjustment
+                            Step 3: Value-Add Upsell
                         </button>
                     </div>
 
@@ -346,7 +346,7 @@
                                     <div class="flex items-start gap-3 max-w-[85%] ml-auto flex-row-reverse">
                                         <div class="w-8 h-8 rounded-full bg-stampede-red flex items-center justify-center shrink-0 text-xs font-bold text-white">A</div>
                                         <div class="chat-bubble-agent p-4 rounded-2xl rounded-tr-none text-sm leading-relaxed shadow-sm">
-                                            "Howdy! I'd love to help you with that. I've checked our live inventory for July 9th, and we have both General Admission and Rodeo tickets available.<br><br>I've gone ahead and automatically added <strong>4 General Admission tickets ($100.00)</strong> and <strong>4 Afternoon Rodeo tickets ($180.00)</strong> to your cart! You can see them in your cart on the right.<br><br>Is there anything else I can add for you?"
+                                            "Howdy! I'd love to help you plan that family trip. I can certainly add both to your cart, but as your digital advisor, I want to double-check: <strong>did you know that your Afternoon Rodeo passes actually include full-day admission to the Stampede grounds?</strong><br><br>Since you asked for both, you'd be double-paying for grounds access. Would you prefer to just get the 4 Rodeo passes to save $100.00, or did you need separate general admission tickets for some other reason?"
                                         </div>
                                     </div>
                                 </div>
@@ -356,13 +356,13 @@
                                     <div class="flex items-start gap-3 max-w-[85%]">
                                         <div class="w-8 h-8 rounded-full bg-stampede-gold flex items-center justify-center shrink-0 text-xs font-bold text-stampede-charcoal">U</div>
                                         <div class="chat-bubble-user p-4 rounded-2xl rounded-tl-none text-sm leading-relaxed shadow-sm">
-                                            "Wait, does the Rodeo ticket include admission to the grounds, or do we need both?"
+                                            "Oh, wow! I had no idea the Rodeo tickets covered grounds entry. Yes, please remove the general admission tickets and just keep the 4 Rodeo passes. That saves us $100!"
                                         </div>
                                     </div>
                                     <div class="flex items-start gap-3 max-w-[85%] ml-auto flex-row-reverse">
                                         <div class="w-8 h-8 rounded-full bg-stampede-red flex items-center justify-center shrink-0 text-xs font-bold text-white">A</div>
                                         <div class="chat-bubble-agent p-4 rounded-2xl rounded-tr-none text-sm leading-relaxed shadow-sm">
-                                            "Great question! Yes, your Afternoon Rodeo ticket actually includes admission to the Stampede grounds for the entire day, so you don't need separate General Admission tickets!<br><br>Would you like me to adjust your cart to remove the 4 General Admission tickets so you aren't double-paying?"
+                                            "You bet! I've automatically updated your cart to remove the 4 General Admission tickets.<br><br>Your cart now contains just <strong>4 Afternoon Rodeo tickets</strong> (with grounds admission fully included) for a new total of <strong>$180.00</strong>.<br><br>Since you're coming on July 9th, would you like me to also add a parking pass or recommend some family-friendly food stands?"
                                         </div>
                                     </div>
                                 </div>
@@ -372,13 +372,13 @@
                                     <div class="flex items-start gap-3 max-w-[85%]">
                                         <div class="w-8 h-8 rounded-full bg-stampede-gold flex items-center justify-center shrink-0 text-xs font-bold text-stampede-charcoal">U</div>
                                         <div class="chat-bubble-user p-4 rounded-2xl rounded-tl-none text-sm leading-relaxed shadow-sm">
-                                            "Oh, perfect! Yes, please remove the general admission tickets and just keep the 4 Rodeo passes."
+                                            "Yes, a parking pass would be great! Also, what time should we arrive for the afternoon Rodeo?"
                                         </div>
                                     </div>
                                     <div class="flex items-start gap-3 max-w-[85%] ml-auto flex-row-reverse">
                                         <div class="w-8 h-8 rounded-full bg-stampede-red flex items-center justify-center shrink-0 text-xs font-bold text-white">A</div>
                                         <div class="chat-bubble-agent p-4 rounded-2xl rounded-tr-none text-sm leading-relaxed shadow-sm">
-                                            "You got it! I've updated your cart to remove the 4 General Admission tickets.<br><br>Your cart now contains just <strong>4 Afternoon Rodeo tickets</strong> (with grounds admission included) for a new total of <strong>$180.00</strong>.<br><br>I'm ready to help you check out whenever you are!"
+                                            "Perfect, I've added a <strong>Day Parking Pass ($25.00)</strong> to your cart!<br><br>Regarding timing: the Afternoon Rodeo starts at 1:30 PM, but since grounds admission is included, I highly recommend arriving around 11:30 AM to enjoy the exhibits and grab some lunch first! The Erlton Gate is the closest entrance to the Rodeo grandstand.<br><br>Your updated total is <strong>$205.00</strong>. I'm ready to help you check out whenever you are!"
                                         </div>
                                     </div>
                                 </div>
@@ -442,12 +442,17 @@
 
                         <div class="space-y-4">
                             <!-- General Admission Item -->
-                            <div class="p-3.5 rounded border border-stampede-border transition-all flex justify-between items-center bg-stampede-cream/30" id="cart-item-ga">
-                                <div>
-                                    <div class="text-xs font-bold text-stampede-charcoal">Stampede General Admission</div>
-                                    <div class="text-[10px] text-gray-500">Date: July 9, 2026 · Qty: 4</div>
+                            <div class="p-3.5 rounded border border-stampede-border transition-all bg-stampede-cream/30" id="cart-item-ga">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <div class="text-xs font-bold text-stampede-charcoal">Stampede General Admission</div>
+                                        <div class="text-[10px] text-gray-500">Date: July 9, 2026 · Qty: 4</div>
+                                    </div>
+                                    <div class="text-sm font-bold text-stampede-charcoal">$100.00</div>
                                 </div>
-                                <div class="text-sm font-bold text-stampede-charcoal">$100.00</div>
+                                <div class="mt-2 bg-yellow-50 text-yellow-800 p-2 rounded border border-yellow-200 text-[10px] font-semibold flex items-center gap-1.5" id="ga-warning">
+                                    <i data-lucide="alert-triangle" class="w-3.5 h-3.5 text-yellow-600"></i> Redundant grounds admission detected (Rodeo ticket includes grounds entry)
+                                </div>
                             </div>
 
                             <!-- Rodeo Passes Item -->
@@ -457,6 +462,15 @@
                                     <div class="text-[10px] text-gray-500">Date: July 9, 2026 · Qty: 4</div>
                                 </div>
                                 <div class="text-sm font-bold text-stampede-charcoal">$180.00</div>
+                            </div>
+
+                            <!-- Parking Pass Item -->
+                            <div class="p-3.5 rounded border border-stampede-border transition-all flex justify-between items-center bg-stampede-cream/30 hidden" id="cart-item-parking">
+                                <div>
+                                    <div class="text-xs font-bold text-stampede-charcoal">Day Parking Pass</div>
+                                    <div class="text-[10px] text-gray-500">Date: July 9, 2026 · Qty: 1</div>
+                                </div>
+                                <div class="text-sm font-bold text-stampede-charcoal">$25.00</div>
                             </div>
 
                             <!-- Cart Summary -->
@@ -790,14 +804,14 @@
 
             // Update chat title & status
             const titles = {
-                1: "Step 1: Multi-Intent Request",
-                2: "Step 2: Contextual Q&A",
-                3: "Step 3: Auto-Cart Adjustment"
+                1: "Step 1: Request & Proactive Validation",
+                2: "Step 2: Cart Optimization",
+                3: "Step 3: Value-Add Upsell"
             };
             const statuses = {
-                1: "NLU Parsing Active",
-                2: "Context-Aware Q&A Active",
-                3: "Client-Side Cart API Triggered"
+                1: "NLU Parsing & Proactive Validation Active",
+                2: "Client-Side Cart API Triggered",
+                3: "Value-Add Upsell & Contextual Q&A Active"
             };
             document.getElementById('chat-title').innerText = titles[step];
             document.getElementById('chat-status').innerText = statuses[step];
@@ -820,30 +834,36 @@
             // Update Cart UI
             const cartGa = document.getElementById('cart-item-ga');
             const cartRodeo = document.getElementById('cart-item-rodeo');
+            const cartParking = document.getElementById('cart-item-parking');
             const cartSubtotal = document.getElementById('cart-subtotal');
             const cartTotal = document.getElementById('cart-total');
             const cartSuccessBadge = document.getElementById('cart-success-badge');
 
             if (step === 1) {
                 cartGa.classList.remove('hidden');
+                document.getElementById('ga-warning').classList.remove('hidden');
                 cartRodeo.classList.remove('hidden');
+                cartParking.classList.add('hidden');
                 cartSubtotal.innerText = "$280.00";
                 cartTotal.innerText = "$280.00";
                 cartSuccessBadge.classList.remove('hidden');
-                cartSuccessBadge.innerHTML = `<i data-lucide="check-circle" class="w-4 h-4 text-green-600"></i> Cart Populated Automatically!`;
+                cartSuccessBadge.innerHTML = `<i data-lucide="check-circle" class="w-4 h-4 text-green-600"></i> Redundant Items Flagged!`;
             } else if (step === 2) {
-                cartGa.classList.remove('hidden');
-                cartRodeo.classList.remove('hidden');
-                cartSubtotal.innerText = "$280.00";
-                cartTotal.innerText = "$280.00";
-                cartSuccessBadge.classList.add('hidden');
-            } else if (step === 3) {
                 cartGa.classList.add('hidden');
                 cartRodeo.classList.remove('hidden');
+                cartParking.classList.add('hidden');
                 cartSubtotal.innerText = "$180.00";
                 cartTotal.innerText = "$180.00";
                 cartSuccessBadge.classList.remove('hidden');
-                cartSuccessBadge.innerHTML = `<i data-lucide="check-circle" class="w-4 h-4 text-green-600"></i> Cart Adjusted Automatically!`;
+                cartSuccessBadge.innerHTML = `<i data-lucide="check-circle" class="w-4 h-4 text-green-600"></i> Cart Optimized Automatically!`;
+            } else if (step === 3) {
+                cartGa.classList.add('hidden');
+                cartRodeo.classList.remove('hidden');
+                cartParking.classList.remove('hidden');
+                cartSubtotal.innerText = "$205.00";
+                cartTotal.innerText = "$205.00";
+                cartSuccessBadge.classList.remove('hidden');
+                cartSuccessBadge.innerHTML = `<i data-lucide="check-circle" class="w-4 h-4 text-green-600"></i> Parking Pass Added!`;
             }
             lucide.createIcons();
         }
