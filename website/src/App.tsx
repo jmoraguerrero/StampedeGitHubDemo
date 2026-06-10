@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Bot, CalendarDays, CheckCircle2, MapPin, Sparkles, Ticket } from 'lucide-react'
 import { AgentforceChat } from './components/AgentforceChat'
+import { AgentforceEmbed } from './components/AgentforceEmbed'
 import { CartPanel } from './components/CartPanel'
 import { Hero } from './components/Hero'
 import { McpGeminiPanel } from './components/McpGeminiPanel'
@@ -52,14 +53,26 @@ function App() {
           <SectionTabs activeSection={activeSection} onSectionChange={setActiveSection} />
           <div className="p-5 md:p-8">
             {activeSection === 'demo' ? (
-              <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_380px]">
-                <AgentforceChat
-                  scenario={scenario}
-                  step={step}
-                  onScenarioChange={handleScenarioChange}
-                  onStepChange={setStep}
-                />
-                {scenario === 'b2b' ? <SalesforceConsole step={step} /> : <CartPanel step={step} />}
+              <div className="space-y-5">
+                <div className="rounded-2xl border border-stampede-border bg-stampede-cream/70 p-4">
+                  <div className="text-xs font-bold uppercase tracking-[0.2em] text-stampede-red">
+                    Script examples
+                  </div>
+                  <p className="mt-2 text-sm leading-6 text-gray-600">
+                    These predefined B2B and B2C conversations stay on the page as presenter
+                    examples. The floating `Plan Your Visit` button now opens the live Agentforce
+                    embed container.
+                  </p>
+                </div>
+                <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_380px]">
+                  <AgentforceChat
+                    scenario={scenario}
+                    step={step}
+                    onScenarioChange={handleScenarioChange}
+                    onStepChange={setStep}
+                  />
+                  {scenario === 'b2b' ? <SalesforceConsole step={step} /> : <CartPanel step={step} />}
+                </div>
               </div>
             ) : null}
 
@@ -108,16 +121,7 @@ function App() {
         Plan Your Visit
       </button>
 
-      {isChatOpen ? (
-        <AgentforceChat
-          scenario={scenario}
-          step={step}
-          isFloating
-          onScenarioChange={handleScenarioChange}
-          onStepChange={setStep}
-          onClose={() => setIsChatOpen(false)}
-        />
-      ) : null}
+      {isChatOpen ? <AgentforceEmbed onClose={() => setIsChatOpen(false)} /> : null}
     </div>
   )
 }
