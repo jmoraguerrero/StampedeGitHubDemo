@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Bot, ExternalLink, Loader2, MessageCircle, Settings, X } from 'lucide-react'
+import { Bot, ExternalLink, Loader2, Send, Settings, X } from 'lucide-react'
 
 let hasInitializedEmbeddedMessaging = false
 
@@ -8,7 +8,7 @@ declare global {
     embeddedservice_bootstrap?: {
       settings: Record<string, unknown>
       utilAPI?: {
-        launchChat?: () => Promise<void>
+        launchChat?: (options?: { shouldStartNewConversation?: boolean }) => Promise<void>
       }
       init: (
         orgId: string,
@@ -33,9 +33,7 @@ type AgentforceConfig = {
 }
 
 export function AgentforceEmbed({ onClose }: AgentforceEmbedProps) {
-  const [loadState, setLoadState] = useState<'idle' | 'loading' | 'launching' | 'ready' | 'error'>(
-    'idle',
-  )
+  const [loadState, setLoadState] = useState<'idle' | 'loading' | 'launching' | 'error'>('idle')
 
   const config = useMemo<AgentforceConfig>(
     () => ({
@@ -64,19 +62,18 @@ export function AgentforceEmbed({ onClose }: AgentforceEmbedProps) {
       const launchChat = window.embeddedservice_bootstrap?.utilAPI?.launchChat
 
       if (!launchChat) {
-        if (attempt < 40) {
+        if (attempt < 80) {
           retryTimeout = window.setTimeout(() => launchNativeChat(attempt + 1), 250)
           return
         }
 
-        setLoadState('ready')
+        setLoadState('error')
         return
       }
 
       setLoadState('launching')
-      launchChat()
+      launchChat({ shouldStartNewConversation: true })
         .then(() => {
-          setLoadState('ready')
           launchTimeout = window.setTimeout(onClose, 300)
         })
         .catch((error) => {
@@ -86,6 +83,10 @@ export function AgentforceEmbed({ onClose }: AgentforceEmbedProps) {
     }
 
     const handleEmbeddedMessagingReady = () => {
+      launchNativeChat()
+    }
+
+    const handleEmbeddedMessagingButtonCreated = () => {
       launchNativeChat()
     }
 
@@ -119,11 +120,16 @@ export function AgentforceEmbed({ onClose }: AgentforceEmbedProps) {
 
     setLoadState('loading')
     window.addEventListener('onEmbeddedMessagingReady', handleEmbeddedMessagingReady)
+    window.addEventListener('onEmbeddedMessagingButtonCreated', handleEmbeddedMessagingButtonCreated)
 
     if (existingScript) {
       initializeAgent()
       return () => {
         window.removeEventListener('onEmbeddedMessagingReady', handleEmbeddedMessagingReady)
+        window.removeEventListener(
+          'onEmbeddedMessagingButtonCreated',
+          handleEmbeddedMessagingButtonCreated,
+        )
         window.clearTimeout(launchTimeout)
         window.clearTimeout(retryTimeout)
       }
@@ -138,6 +144,10 @@ export function AgentforceEmbed({ onClose }: AgentforceEmbedProps) {
 
     return () => {
       window.removeEventListener('onEmbeddedMessagingReady', handleEmbeddedMessagingReady)
+      window.removeEventListener(
+        'onEmbeddedMessagingButtonCreated',
+        handleEmbeddedMessagingButtonCreated,
+      )
       window.clearTimeout(launchTimeout)
       window.clearTimeout(retryTimeout)
     }
@@ -212,35 +222,60 @@ function SetupRequired({ missingKeys }: { missingKeys: string[] }) {
   )
 }
 
-function EmbedStatus({
-  loadState,
-}: {
-  loadState: 'idle' | 'loading' | 'launching' | 'ready' | 'error'
-}) {
-  if (loadState === 'ready') {
-    return (
-      <div className="flex items-center gap-3 rounded-2xl border border-green-200 bg-green-50 p-4 text-sm font-bold text-green-700">
-        <MessageCircle className="h-5 w-5" />
-        Agentforce is ready. Use the native chat window to continue.
-      </div>
-    )
-  }
-
+function EmbedStatus({ loadState }: { loadState: 'idle' | 'loading' | 'launching' | 'error' }) {
   if (loadState === 'error') {
     return (
-      <div className="rounded-2xl border border-red-200 bg-red-50 p-4 text-sm leading-6 text-red-700">
-        The Agentforce embed script could not initialize. Check the Salesforce embed snippet values
-        and allowed domains.
-      </div>
+      <ChatShellBody
+        status="Agentforce is loaded, but the native conversation window did not open."
+        detail="Refresh the page and try again. If this continues, check the browser console for Salesforce launch errors."
+        isLoading={false}
+      />
     )
   }
 
   return (
-    <div className="flex items-center gap-3 rounded-2xl border border-stampede-border bg-stampede-cream p-4 text-sm font-bold text-gray-700">
-      <Loader2 className="h-5 w-5 animate-spin text-stampede-red" />
-      {loadState === 'launching'
-        ? 'Opening the native Agentforce chat...'
-        : 'Loading Agentforce embedded messaging...'}
+    <ChatShellBody
+      status={
+        loadState === 'launching'
+          ? 'Opening StampedeAssistant...'
+          : 'Connecting to StampedeAssistant...'
+      }
+      detail="The real Agentforce chat will open in this page as soon as Salesforce finishes creating the messaging button."
+      isLoading
+    />
+  )
+}
+
+function ChatShellBody({
+  status,
+  detail,
+  isLoading,
+}: {
+  status: string
+  detail: string
+  isLoading: boolean
+}) {
+  return (
+    <div className="overflow-hidden rounded-2xl border border-stampede-border bg-white">
+      <div className="flex min-h-[270px] flex-col items-center justify-center gap-4 border-b border-stampede-border p-6 text-center">
+        {isLoading ? (
+          <Loader2 className="h-8 w-8 animate-spin text-stampede-red" />
+        ) : (
+          <Bot className="h-8 w-8 text-stampede-red" />
+        )}
+        <div>
+          <div className="font-serif text-xl font-bold text-stampede-charcoal">{status}</div>
+          <p className="mt-2 text-sm leading-6 text-gray-600">{detail}</p>
+        </div>
+      </div>
+      <div className="flex items-center gap-3 bg-white p-4">
+        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-stampede-cream text-stampede-red">
+          <Send className="h-4 w-4" />
+        </div>
+        <div className="flex-1 rounded-lg border border-stampede-border px-3 py-3 text-sm text-gray-400">
+          Type your message...
+        </div>
+      </div>
     </div>
   )
 }
