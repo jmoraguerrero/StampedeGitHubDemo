@@ -1,10 +1,15 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Bot, CheckCircle2, ExternalLink, Loader2, Settings, X } from 'lucide-react'
+import { Bot, ExternalLink, Loader2, MessageCircle, Settings, X } from 'lucide-react'
+
+let hasInitializedEmbeddedMessaging = false
 
 declare global {
   interface Window {
     embeddedservice_bootstrap?: {
       settings: Record<string, unknown>
+      utilAPI?: {
+        launchChat?: () => Promise<void>
+      }
       init: (
         orgId: string,
         deploymentName: string,
@@ -28,7 +33,9 @@ type AgentforceConfig = {
 }
 
 export function AgentforceEmbed({ onClose }: AgentforceEmbedProps) {
-  const [loadState, setLoadState] = useState<'idle' | 'loading' | 'ready' | 'error'>('idle')
+  const [loadState, setLoadState] = useState<'idle' | 'loading' | 'launching' | 'ready' | 'error'>(
+    'idle',
+  )
 
   const config = useMemo<AgentforceConfig>(
     () => ({
@@ -50,6 +57,38 @@ export function AgentforceEmbed({ onClose }: AgentforceEmbedProps) {
       return
     }
 
+    let launchTimeout: number | undefined
+    let retryTimeout: number | undefined
+
+    const launchNativeChat = (attempt = 0) => {
+      const launchChat = window.embeddedservice_bootstrap?.utilAPI?.launchChat
+
+      if (!launchChat) {
+        if (attempt < 40) {
+          retryTimeout = window.setTimeout(() => launchNativeChat(attempt + 1), 250)
+          return
+        }
+
+        setLoadState('ready')
+        return
+      }
+
+      setLoadState('launching')
+      launchChat()
+        .then(() => {
+          setLoadState('ready')
+          launchTimeout = window.setTimeout(onClose, 300)
+        })
+        .catch((error) => {
+          console.error('Agentforce native chat failed to launch.', error)
+          setLoadState('error')
+        })
+    }
+
+    const handleEmbeddedMessagingReady = () => {
+      launchNativeChat()
+    }
+
     const existingScript = document.querySelector<HTMLScriptElement>(
       `script[src="${config.bootstrapUrl}"]`,
     )
@@ -62,10 +101,16 @@ export function AgentforceEmbed({ onClose }: AgentforceEmbedProps) {
         }
 
         window.embeddedservice_bootstrap.settings.language = 'en_US'
-        window.embeddedservice_bootstrap.init(config.orgId, config.deploymentName, config.siteUrl, {
-          scrt2URL: config.scrt2Url,
-        })
-        setLoadState('ready')
+        window.embeddedservice_bootstrap.settings.hideChatButtonOnLoad = true
+
+        if (!hasInitializedEmbeddedMessaging) {
+          window.embeddedservice_bootstrap.init(config.orgId, config.deploymentName, config.siteUrl, {
+            scrt2URL: config.scrt2Url,
+          })
+          hasInitializedEmbeddedMessaging = true
+        }
+
+        launchNativeChat()
       } catch (error) {
         console.error('Agentforce embedded messaging failed to initialize.', error)
         setLoadState('error')
@@ -73,10 +118,15 @@ export function AgentforceEmbed({ onClose }: AgentforceEmbedProps) {
     }
 
     setLoadState('loading')
+    window.addEventListener('onEmbeddedMessagingReady', handleEmbeddedMessagingReady)
 
     if (existingScript) {
       initializeAgent()
-      return
+      return () => {
+        window.removeEventListener('onEmbeddedMessagingReady', handleEmbeddedMessagingReady)
+        window.clearTimeout(launchTimeout)
+        window.clearTimeout(retryTimeout)
+      }
     }
 
     const script = document.createElement('script')
@@ -85,7 +135,13 @@ export function AgentforceEmbed({ onClose }: AgentforceEmbedProps) {
     script.onload = initializeAgent
     script.onerror = () => setLoadState('error')
     document.body.appendChild(script)
-  }, [config, missingKeys.length])
+
+    return () => {
+      window.removeEventListener('onEmbeddedMessagingReady', handleEmbeddedMessagingReady)
+      window.clearTimeout(launchTimeout)
+      window.clearTimeout(retryTimeout)
+    }
+  }, [config, missingKeys.length, onClose])
 
   return (
     <section
@@ -156,12 +212,16 @@ function SetupRequired({ missingKeys }: { missingKeys: string[] }) {
   )
 }
 
-function EmbedStatus({ loadState }: { loadState: 'idle' | 'loading' | 'ready' | 'error' }) {
+function EmbedStatus({
+  loadState,
+}: {
+  loadState: 'idle' | 'loading' | 'launching' | 'ready' | 'error'
+}) {
   if (loadState === 'ready') {
     return (
       <div className="flex items-center gap-3 rounded-2xl border border-green-200 bg-green-50 p-4 text-sm font-bold text-green-700">
-        <CheckCircle2 className="h-5 w-5" />
-        Agentforce embedded messaging initialized.
+        <MessageCircle className="h-5 w-5" />
+        Agentforce is ready. Use the native chat window to continue.
       </div>
     )
   }
@@ -178,7 +238,9 @@ function EmbedStatus({ loadState }: { loadState: 'idle' | 'loading' | 'ready' | 
   return (
     <div className="flex items-center gap-3 rounded-2xl border border-stampede-border bg-stampede-cream p-4 text-sm font-bold text-gray-700">
       <Loader2 className="h-5 w-5 animate-spin text-stampede-red" />
-      Loading Agentforce embedded messaging...
+      {loadState === 'launching'
+        ? 'Opening the native Agentforce chat...'
+        : 'Loading Agentforce embedded messaging...'}
     </div>
   )
 }
