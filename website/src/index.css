@@ -1,0 +1,63 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;600;700&display=swap');
+@import 'tailwindcss';
+
+@theme {
+  --color-stampede-red: #c8102e;
+  --color-stampede-dark-red: #8a0e1c;
+  --color-stampede-gold: #d4af37;
+  --color-stampede-light-gold: #f4e0a5;
+  --color-stampede-cream: #faf6f0;
+  --color-stampede-charcoal: #1e1e1e;
+  --color-stampede-dark-charcoal: #121212;
+  --color-stampede-border: #e5e5e5;
+  --font-sans: Inter, sans-serif;
+  --font-serif: 'Playfair Display', serif;
+}
+
+:root {
+  color: #1e1e1e;
+  background: #faf6f0;
+  font-family: Inter, sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+.stampede-pattern {
+  background-image:
+    radial-gradient(circle at 20px 20px, rgba(255, 255, 255, 0.2) 2px, transparent 2px),
+    linear-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.12) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #faf6f0;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #c8102e;
+  border-radius: 999px;
+}
