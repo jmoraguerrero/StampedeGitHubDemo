@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from 'react'
-import { Bot, ExternalLink, Loader2, Send, Settings, X } from 'lucide-react'
+import { useEffect, useMemo, useRef, useState, type RefObject } from 'react'
+import { Bot, ExternalLink, Loader2, Settings, X } from 'lucide-react'
 
 let hasInitializedEmbeddedMessaging = false
 
@@ -7,9 +7,6 @@ declare global {
   interface Window {
     embeddedservice_bootstrap?: {
       settings: Record<string, unknown>
-      utilAPI?: {
-        launchChat?: (options?: { shouldStartNewConversation?: boolean }) => Promise<void>
-      }
       init: (
         orgId: string,
         deploymentName: string,
@@ -33,7 +30,8 @@ type AgentforceConfig = {
 }
 
 export function AgentforceEmbed({ onClose }: AgentforceEmbedProps) {
-  const [loadState, setLoadState] = useState<'idle' | 'loading' | 'launching' | 'error'>('idle')
+  const [loadState, setLoadState] = useState<'idle' | 'loading' | 'ready' | 'error'>('idle')
+  const targetRef = useRef<HTMLDivElement>(null)
 
   const config = useMemo<AgentforceConfig>(
     () => ({
@@ -55,39 +53,14 @@ export function AgentforceEmbed({ onClose }: AgentforceEmbedProps) {
       return
     }
 
-    let launchTimeout: number | undefined
-    let retryTimeout: number | undefined
-
-    const launchNativeChat = (attempt = 0) => {
-      const launchChat = window.embeddedservice_bootstrap?.utilAPI?.launchChat
-
-      if (!launchChat) {
-        if (attempt < 80) {
-          retryTimeout = window.setTimeout(() => launchNativeChat(attempt + 1), 250)
-          return
-        }
-
-        setLoadState('error')
-        return
-      }
-
-      setLoadState('launching')
-      launchChat({ shouldStartNewConversation: true })
-        .then(() => {
-          launchTimeout = window.setTimeout(onClose, 300)
-        })
-        .catch((error) => {
-          console.error('Agentforce native chat failed to launch.', error)
-          setLoadState('error')
-        })
+    if (!targetRef.current) {
+      return
     }
+
+    const targetElement = targetRef.current
 
     const handleEmbeddedMessagingReady = () => {
-      launchNativeChat()
-    }
-
-    const handleEmbeddedMessagingButtonCreated = () => {
-      launchNativeChat()
+      setLoadState('ready')
     }
 
     const existingScript = document.querySelector<HTMLScriptElement>(
@@ -102,7 +75,10 @@ export function AgentforceEmbed({ onClose }: AgentforceEmbedProps) {
         }
 
         window.embeddedservice_bootstrap.settings.language = 'en_US'
-        window.embeddedservice_bootstrap.settings.hideChatButtonOnLoad = true
+        window.embeddedservice_bootstrap.settings.displayMode = 'inline'
+        window.embeddedservice_bootstrap.settings.targetElement = targetElement
+        window.embeddedservice_bootstrap.settings.headerEnabled = true
+        window.embeddedservice_bootstrap.settings.disableInlineAutoLaunch = false
 
         if (!hasInitializedEmbeddedMessaging) {
           window.embeddedservice_bootstrap.init(config.orgId, config.deploymentName, config.siteUrl, {
@@ -110,8 +86,6 @@ export function AgentforceEmbed({ onClose }: AgentforceEmbedProps) {
           })
           hasInitializedEmbeddedMessaging = true
         }
-
-        launchNativeChat()
       } catch (error) {
         console.error('Agentforce embedded messaging failed to initialize.', error)
         setLoadState('error')
@@ -120,18 +94,11 @@ export function AgentforceEmbed({ onClose }: AgentforceEmbedProps) {
 
     setLoadState('loading')
     window.addEventListener('onEmbeddedMessagingReady', handleEmbeddedMessagingReady)
-    window.addEventListener('onEmbeddedMessagingButtonCreated', handleEmbeddedMessagingButtonCreated)
 
     if (existingScript) {
       initializeAgent()
       return () => {
         window.removeEventListener('onEmbeddedMessagingReady', handleEmbeddedMessagingReady)
-        window.removeEventListener(
-          'onEmbeddedMessagingButtonCreated',
-          handleEmbeddedMessagingButtonCreated,
-        )
-        window.clearTimeout(launchTimeout)
-        window.clearTimeout(retryTimeout)
       }
     }
 
@@ -144,14 +111,8 @@ export function AgentforceEmbed({ onClose }: AgentforceEmbedProps) {
 
     return () => {
       window.removeEventListener('onEmbeddedMessagingReady', handleEmbeddedMessagingReady)
-      window.removeEventListener(
-        'onEmbeddedMessagingButtonCreated',
-        handleEmbeddedMessagingButtonCreated,
-      )
-      window.clearTimeout(launchTimeout)
-      window.clearTimeout(retryTimeout)
     }
-  }, [config, missingKeys.length, onClose])
+  }, [config, missingKeys.length])
 
   return (
     <section
@@ -184,7 +145,7 @@ export function AgentforceEmbed({ onClose }: AgentforceEmbedProps) {
         {missingKeys.length > 0 ? (
           <SetupRequired missingKeys={missingKeys} />
         ) : (
-          <EmbedStatus loadState={loadState} />
+          <InlineChatFrame loadState={loadState} targetRef={targetRef} />
         )}
       </div>
     </section>
@@ -222,60 +183,37 @@ function SetupRequired({ missingKeys }: { missingKeys: string[] }) {
   )
 }
 
-function EmbedStatus({ loadState }: { loadState: 'idle' | 'loading' | 'launching' | 'error' }) {
-  if (loadState === 'error') {
-    return (
-      <ChatShellBody
-        status="Agentforce is loaded, but the native conversation window did not open."
-        detail="Refresh the page and try again. If this continues, check the browser console for Salesforce launch errors."
-        isLoading={false}
-      />
-    )
-  }
-
-  return (
-    <ChatShellBody
-      status={
-        loadState === 'launching'
-          ? 'Opening StampedeAssistant...'
-          : 'Connecting to StampedeAssistant...'
-      }
-      detail="The real Agentforce chat will open in this page as soon as Salesforce finishes creating the messaging button."
-      isLoading
-    />
-  )
-}
-
-function ChatShellBody({
-  status,
-  detail,
-  isLoading,
+function InlineChatFrame({
+  loadState,
+  targetRef,
 }: {
-  status: string
-  detail: string
-  isLoading: boolean
+  loadState: 'idle' | 'loading' | 'ready' | 'error'
+  targetRef: RefObject<HTMLDivElement | null>
 }) {
   return (
-    <div className="overflow-hidden rounded-2xl border border-stampede-border bg-white">
-      <div className="flex min-h-[270px] flex-col items-center justify-center gap-4 border-b border-stampede-border p-6 text-center">
-        {isLoading ? (
-          <Loader2 className="h-8 w-8 animate-spin text-stampede-red" />
-        ) : (
-          <Bot className="h-8 w-8 text-stampede-red" />
-        )}
-        <div>
-          <div className="font-serif text-xl font-bold text-stampede-charcoal">{status}</div>
-          <p className="mt-2 text-sm leading-6 text-gray-600">{detail}</p>
+    <div className="relative overflow-hidden rounded-2xl border border-stampede-border bg-white">
+      <div ref={targetRef} className="h-[560px] bg-white" />
+      {loadState !== 'ready' ? (
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-white p-6 text-center">
+          {loadState === 'error' ? (
+            <Bot className="h-8 w-8 text-stampede-red" />
+          ) : (
+            <Loader2 className="h-8 w-8 animate-spin text-stampede-red" />
+          )}
+          <div>
+            <div className="font-serif text-xl font-bold text-stampede-charcoal">
+              {loadState === 'error'
+                ? 'Agentforce did not open in inline mode.'
+                : 'Connecting to StampedeAssistant...'}
+            </div>
+            <p className="mt-2 text-sm leading-6 text-gray-600">
+              {loadState === 'error'
+                ? 'Refresh the page and check the browser console for Salesforce embed errors.'
+                : 'The real Agentforce chat will render in this panel.'}
+            </p>
+          </div>
         </div>
-      </div>
-      <div className="flex items-center gap-3 bg-white p-4">
-        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-stampede-cream text-stampede-red">
-          <Send className="h-4 w-4" />
-        </div>
-        <div className="flex-1 rounded-lg border border-stampede-border px-3 py-3 text-sm text-gray-400">
-          Type your message...
-        </div>
-      </div>
+      ) : null}
     </div>
   )
 }
