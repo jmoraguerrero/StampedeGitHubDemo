@@ -1,0 +1,666 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Agentforce Demo Build Guide</title>
+    <style>
+      :root {
+        --blue: #0176d3;
+        --navy: #032d60;
+        --light-blue: #eaf5fe;
+        --bg: #f3f3f3;
+        --card: #ffffff;
+        --text: #181818;
+        --muted: #5c5c5c;
+        --border: #c9c9c9;
+        --code-bg: #f7f7f7;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family:
+          "Salesforce Sans", Arial, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        line-height: 1.55;
+        overflow-wrap: anywhere;
+      }
+
+      header {
+        background: linear-gradient(135deg, var(--navy), var(--blue));
+        color: #ffffff;
+      }
+
+      .container {
+        max-width: 1160px;
+        margin: 0 auto;
+        padding: 24px;
+      }
+
+      .hero {
+        padding-top: 40px;
+        padding-bottom: 40px;
+      }
+
+      .badge {
+        display: inline-flex;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.16);
+        padding: 6px 12px;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        margin: 16px 0 8px;
+        font-size: clamp(34px, 5vw, 56px);
+        line-height: 1.05;
+      }
+
+      header p {
+        max-width: 760px;
+        margin: 0;
+        color: #d8edff;
+        font-size: 18px;
+      }
+
+      main {
+        display: grid;
+        grid-template-columns: 260px 1fr;
+        gap: 20px;
+        align-items: start;
+      }
+
+      nav {
+        position: sticky;
+        top: 16px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: var(--card);
+        padding: 12px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+      }
+
+      nav strong {
+        display: block;
+        padding: 8px 10px 10px;
+        color: var(--navy);
+        font-size: 14px;
+      }
+
+      nav a {
+        display: block;
+        border-radius: 6px;
+        padding: 8px 10px;
+        color: var(--blue);
+        font-size: 14px;
+        text-decoration: none;
+      }
+
+      nav a:hover {
+        background: var(--light-blue);
+      }
+
+      section {
+        margin-bottom: 16px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: var(--card);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+      }
+
+      h2 {
+        margin: 0;
+        border-bottom: 1px solid var(--border);
+        padding: 16px 20px;
+        color: var(--navy);
+        font-size: 22px;
+      }
+
+      h3 {
+        margin: 18px 0 8px;
+        color: var(--navy);
+        font-size: 16px;
+      }
+
+      .content {
+        padding: 18px 20px 20px;
+      }
+
+      ol,
+      ul {
+        margin: 8px 0 0;
+        padding-left: 24px;
+      }
+
+      li {
+        margin: 7px 0;
+      }
+
+      p {
+        margin: 0 0 12px;
+        overflow-wrap: anywhere;
+      }
+
+      code {
+        border: 1px solid #dddbda;
+        border-radius: 4px;
+        background: var(--code-bg);
+        padding: 1px 5px;
+        font-family: Consolas, "Courier New", monospace;
+        font-size: 0.94em;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+      }
+
+      pre {
+        overflow-x: auto;
+        border: 1px solid #dddbda;
+        border-radius: 6px;
+        background: var(--code-bg);
+        padding: 14px;
+        color: #080707;
+        font-family: Consolas, "Courier New", monospace;
+        font-size: 13px;
+        line-height: 1.55;
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 12px;
+        table-layout: fixed;
+      }
+
+      th,
+      td {
+        border: 1px solid var(--border);
+        padding: 10px;
+        text-align: left;
+        vertical-align: top;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+      }
+
+      th {
+        background: var(--light-blue);
+        color: var(--navy);
+      }
+
+      .note {
+        border-left: 4px solid #dd7a01;
+        border-radius: 4px;
+        background: #fff3d6;
+        padding: 12px 14px;
+      }
+
+      footer {
+        color: var(--muted);
+        padding: 20px 0;
+        font-size: 13px;
+      }
+
+      @media (max-width: 840px) {
+        main {
+          grid-template-columns: 1fr;
+        }
+
+        nav {
+          position: static;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container hero">
+        <span class="badge">Agentforce Vibe 2.0</span>
+        <h1>Demo Build Guide</h1>
+        <p>A plain-language guide for creating the demo, hosting it, and connecting it to an Agentforce chat.</p>
+      </div>
+    </header>
+
+    <div class="container">
+      <main>
+        <nav>
+          <strong>Sections</strong>
+          <a href="#before">Before</a>
+          <a href="#cursor">Activities In Cursor</a>
+          <a href="#hosting">Hosting Options</a>
+          <a href="#azure">Activities In Azure</a>
+          <a href="#github">Using GitHub</a>
+          <a href="#salesforce">Activities In Salesforce</a>
+          <a href="#omni-channel">Omni-Channel Setup</a>
+          <a href="#snippet">Code Snippet</a>
+          <a href="#variables">GitHub Variables</a>
+        </nav>
+
+        <div>
+          <section id="before">
+            <h2>Before</h2>
+            <div class="content">
+              <p>
+                Before building the demo, prepare Cursor with the Salesforce skills. These skills
+                give the agent Salesforce-specific instructions so it can better understand projects,
+                metadata, Agentforce, and deployment tasks.
+              </p>
+
+              <h3>1 - Define skills in Cursor</h3>
+              <p>Run this command once to add the Salesforce skills to Cursor globally.</p>
+              <pre><code>npx --yes skills add forcedotcom/sf-skills --agent cursor --global --copy --yes</code></pre>
+
+              <h3>2 - Verify skills</h3>
+              <p>Run this command to confirm the skills were installed and are available to Cursor.</p>
+              <pre><code>npx skills ls --agent cursor --global</code></pre>
+            </div>
+          </section>
+
+          <section id="cursor">
+            <h2>Activities In Cursor</h2>
+            <div class="content">
+              <p>
+                Cursor is used to generate the first version of the demo application. The goal is to
+                give Cursor the script and the visual reference, then let it create a static React and
+                Vite demo that can be reviewed before connecting the real agent.
+              </p>
+              <p>
+                In this part, the agent is acting like the developer. It reads the demo script,
+                understands the target experience, creates the application structure, and runs the
+                commands needed to check that the demo builds correctly.
+              </p>
+
+              <ol>
+                <li>Go to GitHub and open the repository that contains the demo files.</li>
+                <li>Click <strong>Code</strong> and copy the repository URL.</li>
+                <li>Ask the Cursor agent to clone the repository, or run the clone command in the Cursor terminal.</li>
+                <li>Create the Salesforce project that will hold related Salesforce work.</li>
+                <li>Be sure to be in the same folder for <code>Demo_Script.MD</code> so Cursor can reference it.</li>
+                <li>Instruct Cursor to create the demo app.</li>
+              </ol>
+
+              <h3>Clone the repository</h3>
+              <p>Use the repository URL copied from GitHub.</p>
+              <pre><code>git clone &lt;repo-url&gt;
+cd &lt;repo-folder&gt;</code></pre>
+
+              <h3>Create the Salesforce project</h3>
+              <p>Run this in the Cursor terminal when a new Salesforce project is needed.</p>
+              <pre><code>sf project generate --name StampedeSalesforceProject</code></pre>
+
+              <h3>Prompt example to create the demo app</h3>
+              <p>
+                This is an example prompt used to instruct Cursor to plan and create the static demo
+                from the script and style guide.
+              </p>
+              <pre><code>OK plan how to build the demo in @StampedeWrangler/DEMO_SCRIPT.md consider the agent section, and use the page @StampedeWrangler/PLAN_PRESENTATION.html  as guide for styles, make it with react and vite, but static as the first draft</code></pre>
+
+              <p>The agent decided to use React and Vite, and built the demo.</p>
+
+              <h3>5 - Run commands</h3>
+              <p>Install the app dependencies and build the app to make sure the generated demo works.</p>
+              <pre><code>npm install
+npm run build</code></pre>
+
+              <h3>6 - Review locally the demo</h3>
+              <p>Open the local version and review the look, content, and flow before hosting it publicly.</p>
+            </div>
+          </section>
+
+          <section id="hosting">
+            <h2>Hosting Options</h2>
+            <div class="content">
+              <p>
+                After the demo is built, it needs to be hosted somewhere with a public URL. That URL
+                is what Salesforce uses when configuring the trusted domain for the embedded
+                Agentforce chat.
+              </p>
+              <p>
+                We can use either <strong>Azure Static Web Apps</strong> or <strong>GitHub Pages</strong>.
+                The sections below show the steps for each option.
+              </p>
+            </div>
+          </section>
+
+          <section id="azure">
+            <h2>Activities In Azure</h2>
+            <div class="content">
+              <p>
+                Azure Static Web Apps was one hosting option explored for making the demo available
+                through a public URL. A public URL is needed because Salesforce must trust the domain
+                where the embedded chat runs.
+              </p>
+
+              <ol>
+                <li>Go to <strong>+ Create a resource</strong>.</li>
+                <li>Search for <strong>Static Web App</strong>.</li>
+                <li>Click on <strong>Create</strong>.</li>
+                <li>
+                  Add:
+                  <ul>
+                    <li>Leave subscription as it is, and select a resource group.</li>
+                    <li>Name: no spaces allowed, example <code>StampedeWebChatAzureDemo</code>.</li>
+                    <li>Plan Type: Free.</li>
+                    <li>Deployment Details: Other.</li>
+                    <li>Be sure that on the tab <strong>Deployment Configuration</strong> there is <strong>Deployment Token</strong> selected.</li>
+                  </ul>
+                </li>
+                <li>Click <strong>Review and Create</strong>.</li>
+                <li>
+                  On the overview for the app copy:
+                  <pre><code>URL: https://gray-hill-04379890f.7.azurestaticapps.net</code></pre>
+                </li>
+                <li>Go to the tab <strong>Manage deployment token</strong> and copy it.</li>
+              </ol>
+
+              <div class="note">
+                <p>
+                  Note: We were able to create one Static Web App. With the Azure account we had
+                  access to, we could only have one Static Web App using the Free SKU. We were not
+                  able to create a second Static App due to:
+                </p>
+                <pre><code>"code": "InvalidSkuName",
+"target": "/subscriptions/d41f65a5-e9ed-4ef4-b968-93a24decf7a3/resourceGroups/M365_Canada_Team-RG-ESFV5/providers/Microsoft.Web/staticSites/StampedeWebChatAzureDemo",
+"message": "This subscription has too many static sites with SKU: Free."</code></pre>
+              </div>
+
+              <h3>Build and deploy locally with the deployment token</h3>
+              <p>
+                After copying the deployment token from Azure, build the app locally and deploy the
+                generated files to the Static Web App.
+              </p>
+              <pre><code>cd website
+npm install
+npm run build
+npx @azure/static-web-apps-cli deploy ./dist --deployment-token YOUR_DEPLOYMENT_TOKEN</code></pre>
+            </div>
+          </section>
+
+          <section id="github">
+            <h2>Using GitHub</h2>
+            <div class="content">
+              <p>
+                GitHub Pages was used as the hosting option for the demo. The demo needs Pages so it
+                can be accessed from a public URL. Pages on a public repo is free. Pages on a private
+                repo requires a paid plan, so the test was done with a public repo.
+              </p>
+              <ol>
+                <li>Recreate the new repo on my account to setup the Pages.</li>
+                <li>Ask Cursor to configure the app to be hosted in GitHub Pages.</li>
+                <li>The workflow deploys the app every time changes are pushed to <code>main</code>.</li>
+              </ol>
+            </div>
+          </section>
+
+          <section id="salesforce">
+            <h2>Activities In Salesforce Once We Have The URL Where We Will Host The App</h2>
+            <div class="content">
+              <p>
+                Salesforce needs the public URL before the chat can be embedded. The URL is used as
+                the trusted domain for the messaging channel and embedded service deployment.
+              </p>
+
+              <ol start="0">
+                <li>Add the GitHub site as a trusted URL: <code>https://jmoraguerrero.github.io/</code>.</li>
+                <li>Create an agent and test it, or ask Cursor to create it.</li>
+                <li>Create a new queue for the object <code>Messaging Session</code>, then add users and the agent.</li>
+                <li>Configure an actual user on Omni-Channel. A human user needs to be connected so the agent can redirect if needed. If there is no human, the agent will not work.</li>
+              </ol>
+
+              <ol>
+                <li>Go to <strong>Setup - Messaging Settings</strong>. This is where the web chat channel is created.</li>
+                <li>
+                  Click on <strong>New Channel</strong>, then <strong>Next</strong> and select <strong>Enhanced Chat</strong>.
+                  <ul>
+                    <li>Enter a Name: <code>StampedeDemoGithub</code>.</li>
+                    <li>Deployment Type: leave it as Web.</li>
+                    <li>Domain will be the URL where the demo is hosted. For <code>https://jmoraguerrero.github.io/StampedeGitHubDemo/</code> would be <code>jmoraguerrero.github.io</code>.</li>
+                  </ul>
+                </li>
+                <li>For routing type, select <strong>Agentforce Service Agent</strong>, then select the agent and queue created before.</li>
+                <li>Go to <strong>Setup - Embedded Service Deployments</strong>, then click <strong>New</strong>.</li>
+                <li>Select <strong>Enhanced Chat</strong>. This connects the embedded deployment to the enhanced chat channel.</li>
+                <li>Select <strong>Web</strong>. This means the chat will be embedded in a website.</li>
+                <li>Enter a name and domain, then select the messaging channel created before and save.</li>
+                <li>After it is created, go to <strong>Code Snippet</strong> and click <strong>Install</strong>. It is not installing anything, but it takes you to the code where we get the details to embed the agent in the demo.</li>
+                <li>Copy the chat code snippet. The snippet contains the values needed by the app.</li>
+              </ol>
+            </div>
+          </section>
+
+          <section id="omni-channel">
+            <h2>Omni-Channel Setup</h2>
+            <div class="content">
+              <p>
+                Omni-Channel is the Salesforce feature that lets a human user receive work from the
+                chat. In this demo, the work is a <code>Messaging Session</code>. If the Agentforce
+                agent needs to redirect or escalate to a person, Omni-Channel needs to know which
+                queue, routing rules, presence status, and user can receive that work.
+              </p>
+
+              <h3>How the pieces work together</h3>
+              <ul>
+                <li><strong>Service Channel:</strong> tells Salesforce that <code>Messaging Session</code> is work that can be routed.</li>
+                <li><strong>Routing Configuration:</strong> tells Salesforce how important the work is and how to choose the user who receives it.</li>
+                <li><strong>Queue:</strong> groups the messaging work and the users who can receive it.</li>
+                <li><strong>Presence Status:</strong> lets a user mark themselves available for messaging work.</li>
+                <li><strong>Presence Configuration:</strong> controls how much work a user can receive and which statuses they can use.</li>
+                <li><strong>Service Resource / User:</strong> makes the human user available as a resource for routing.</li>
+                <li><strong>Omni-Channel Utility:</strong> adds the Omni-Channel widget to a Salesforce app so the user can go online.</li>
+              </ul>
+
+              <h3>1 - Enable Omni-Channel</h3>
+              <ol>
+                <li>Go to <strong>Setup</strong>.</li>
+                <li>Search for <strong>Omni-Channel Settings</strong>.</li>
+                <li>Enable Omni-Channel.</li>
+                <li>Save the settings.</li>
+              </ol>
+
+              <h3>2 - Create or confirm the Service Channel</h3>
+              <p>
+                The service channel tells Salesforce what object should be routed by Omni-Channel.
+                For this demo, use <code>Messaging Session</code>.
+              </p>
+              <ol>
+                <li>Go to <strong>Setup</strong>.</li>
+                <li>Search for <strong>Service Channels</strong>.</li>
+                <li>Create or confirm a service channel for <code>Messaging Session</code>.</li>
+                <li>Save the service channel.</li>
+              </ol>
+
+              <h3>3 - Create the Routing Configuration</h3>
+              <p>
+                The routing configuration controls how Salesforce sends the messaging work to users.
+                For a demo, keep it simple and use a basic priority and routing model.
+              </p>
+              <ol>
+                <li>Go to <strong>Setup</strong>.</li>
+                <li>Search for <strong>Routing Configurations</strong>.</li>
+                <li>Create a routing configuration for messaging work.</li>
+                <li>Set the priority and routing model.</li>
+                <li>Save the routing configuration.</li>
+              </ol>
+
+              <h3>4 - Create the Queue</h3>
+              <p>
+                The queue is where the messaging work waits until Omni-Channel sends it to an
+                available user.
+              </p>
+              <ol>
+                <li>Go to <strong>Setup</strong>.</li>
+                <li>Search for <strong>Queues</strong>.</li>
+                <li>Create a queue for the <code>Messaging Session</code> object.</li>
+                <li>Associate the queue with the routing configuration created before.</li>
+                <li>Add the human users and the agent users that should be part of the demo.</li>
+                <li>Save the queue.</li>
+              </ol>
+
+              <h3>5 - Create the Presence Status</h3>
+              <p>
+                Presence is how the user tells Salesforce if they are available. If the user is not
+                available, Omni-Channel will not route messaging work to them.
+              </p>
+              <ol>
+                <li>Go to <strong>Setup</strong>.</li>
+                <li>Search for <strong>Presence Statuses</strong>.</li>
+                <li>Create an available status for messaging, for example <code>Available - Messaging</code>.</li>
+                <li>Add the <code>Messaging Session</code> service channel to the status.</li>
+                <li>Save the presence status.</li>
+              </ol>
+
+              <h3>6 - Create or update the Presence Configuration</h3>
+              <p>
+                The presence configuration controls how much work a user can receive and which users
+                can use Omni-Channel.
+              </p>
+              <ol>
+                <li>Go to <strong>Setup</strong>.</li>
+                <li>Search for <strong>Presence Configurations</strong>.</li>
+                <li>Create or update the configuration used for the demo users.</li>
+                <li>Set the capacity for the user.</li>
+                <li>Add the available presence status created before.</li>
+                <li>Assign the configuration to the right users or profiles.</li>
+                <li>Save the presence configuration.</li>
+              </ol>
+
+              <h3>7 - Add presence access to the user or profile</h3>
+              <p>
+                The user must have access to the presence status. Without this, the user may open
+                Omni-Channel but not see the status needed to go online.
+              </p>
+              <ol>
+                <li>Go to the user profile or permission setup used by the demo user.</li>
+                <li>Find <strong>Enabled Service Presence Status Access</strong>.</li>
+                <li>Add the available messaging presence status.</li>
+                <li>Save the change.</li>
+              </ol>
+
+              <h3>8 - Add Omni-Channel to the Salesforce app</h3>
+              <p>
+                The user needs the Omni-Channel widget in the Salesforce app. This is where they set
+                themselves available and receive work.
+              </p>
+              <ol>
+                <li>Go to <strong>Setup</strong>.</li>
+                <li>Search for <strong>App Manager</strong>.</li>
+                <li>Find the Salesforce app used for the demo and click <strong>Edit</strong>.</li>
+                <li>Go to <strong>Utility Items</strong>.</li>
+                <li>Click <strong>Add Utility Item</strong>.</li>
+                <li>Select <strong>Omni-Channel</strong>.</li>
+                <li>Save the app.</li>
+              </ol>
+
+              <h3>9 - Add the user as a Service Resource</h3>
+              <p>
+                The human user needs to be available as a resource so Salesforce can route messaging
+                work to them.
+              </p>
+              <ol>
+                <li>Go to <strong>Setup</strong>.</li>
+                <li>Search for <strong>Service Resources</strong>.</li>
+                <li>Create or confirm a service resource for the human demo user.</li>
+                <li>Make sure the service resource is active.</li>
+                <li>Save the service resource.</li>
+              </ol>
+
+              <h3>10 - Test Omni-Channel</h3>
+              <ol>
+                <li>Open the Salesforce app used for the demo.</li>
+                <li>Open the Omni-Channel utility.</li>
+                <li>Set the user presence to the available messaging status.</li>
+                <li>Start a chat from the hosted demo site.</li>
+                <li>Confirm that the agent can route or escalate the messaging session to the available user.</li>
+              </ol>
+            </div>
+          </section>
+
+          <section id="snippet">
+            <h2>Code Snippet Example</h2>
+            <div class="content">
+              <p>
+                The code snippet is generated by Salesforce. We do not paste the whole snippet
+                directly into the app. Instead, we copy the key values and use them as GitHub
+                variables.
+              </p>
+
+              <pre><code>&lt;script type='text/javascript'&gt;
+  function initEmbeddedMessaging() {
+    try {
+      embeddedservice_bootstrap.settings.language = 'en_US'; // For example, enter 'en' or 'en-US'
+
+      embeddedservice_bootstrap.init(
+        '00DAs00000vvZeb',
+        'StampedeGitHubDemo',
+        'https://velocity-fun-8615--stampede.sandbox.my.site.com/ESWStampedeGitHubDemo1781103141367',
+        {
+          scrt2URL: 'https://velocity-fun-8615--stampede.sandbox.my.salesforce-scrt.com'
+        }
+      );
+    } catch (err) {
+      console.error('Error loading Embedded Messaging: ', err);
+    }
+  };
+&lt;/script&gt;
+&lt;script type='text/javascript' src='https://velocity-fun-8615--stampede.sandbox.my.site.com/ESWStampedeGitHubDemo1781103141367/assets/js/bootstrap.min.js' onload='initEmbeddedMessaging()'&gt;&lt;/script&gt;</code></pre>
+            </div>
+          </section>
+
+          <section id="variables">
+            <h2>Back To Cursor</h2>
+            <div class="content">
+              <p>
+                Go back to Cursor and ask the agent to update the demo so it embeds the Agentforce
+                chat. Once the app is ready, add GitHub repository variables with values from the
+                Salesforce embedded messaging snippet.
+              </p>
+              <p>
+                These variables let GitHub build the public demo with the correct Salesforce chat
+                configuration.
+              </p>
+
+              <table>
+                <tbody>
+                  <tr>
+                    <th>VITE_AGENTFORCE_BOOTSTRAP_URL</th>
+                    <td><code>https://velocity-fun-8615--stampede.sandbox.my.site.com/ESWStampedeGitHubTest1781103428110/assets/js/bootstrap.min.js</code></td>
+                  </tr>
+                  <tr>
+                    <th>VITE_AGENTFORCE_ORG_ID</th>
+                    <td><code>00DAs00000vvZeb</code></td>
+                  </tr>
+                  <tr>
+                    <th>VITE_AGENTFORCE_DEPLOYMENT_NAME</th>
+                    <td><code>StampedeGitHubTest</code></td>
+                  </tr>
+                  <tr>
+                    <th>VITE_AGENTFORCE_SITE_URL</th>
+                    <td><code>https://velocity-fun-8615--stampede.sandbox.my.site.com/ESWStampedeGitHubTest1781103428110</code></td>
+                  </tr>
+                  <tr>
+                    <th>VITE_AGENTFORCE_SCRT2_URL</th>
+                    <td></td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <p>These changes are local and not committed/pushed yet.</p>
+            </div>
+          </section>
+
+          <footer>Local draft only.</footer>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>
