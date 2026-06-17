@@ -1,0 +1,1 @@
+{"root":["./src/hdlsapp.tsx","./src/main.tsx","./src/components/hdlsagentlauncherbutton.tsx","./src/components/hdlsagentpopuppanel.tsx","./src/components/hdlscomposer.tsx","./src/components/hdlsconnectionstatus.tsx","./src/components/hdlsmessagelist.tsx","./src/lib/hdlsagentapiclient.ts","./src/types/hdlschat.ts"],"errors":true,"version":"5.9.3"}
